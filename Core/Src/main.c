@@ -24,6 +24,7 @@
 #include "pushbutton.h"
 #include "menu.h"
 #include "measuring.h"
+#include "strommessung.h"
 
 
 /******************************************************************************
@@ -125,50 +126,85 @@ int main(void) {
 			ADC2_IN13_IN5_scan_start();
 			break;
 		case MENU_FIVE:
-			while(1){
-				ADC3_IN13_IN4_scan_init();
-				ADC3_IN13_IN4_scan_start();
-				while(MEAS_data_ready = false);
-				MEAS_data_ready = false;
+//			while(1){
+//				ADC3_IN13_IN4_scan_init();
+//				ADC3_IN13_IN4_scan_start();
+//				while(MEAS_data_ready == false);
+//				MEAS_data_ready = false;
+//				uint32_t *ADC_samples = get_ADC_samples();
+//				uint32_t left_max = 0;
+//				uint32_t right_max = 0;
+//				uint32_t left_min = 5000;
+//				uint32_t right_min = 5000;
+//				for (int i = 0; i < get_ADC_NUMS(); i++){
+//					if (ADC_samples[2*i] > left_max){
+//						left_max = ADC_samples[2*i];
+//					}
+//					if (ADC_samples[2*i+1] > right_max){
+//						right_max = ADC_samples[2*i+1];
+//					}
+//					if (ADC_samples[2*i] < left_min){
+//						left_min = ADC_samples[2*i];
+//					}
+//					if (ADC_samples[2*i+1] < right_min){
+//						right_min = ADC_samples[2*i+1];
+//					}
+//
+//				}
+//
+//				measure_current_HAL_Left();
+//				//display result
+//				const uint32_t Y_OFFSET = 260;
+//				const uint32_t X_SIZE = 240;
+//				uint32_t data;
+//				uint32_t data_last;
+//				/* Clear the display */
+//				BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+//				BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
+//				/* Write first 2 samples as numbers */
+//				BSP_LCD_SetFont(&Font24);
+//				BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+//				BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+//				char text[16];
+//				snprintf(text, 15, "LEFT: %4d", (int)(left_max-left_min));
+//				BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
+//				snprintf(text, 15, "RIGHT: %4d", (int)(right_max-right_min));
+//				BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
+//				HAL_Delay(200);
+//
+//			}
+			while(1)
+			{
 				uint32_t *ADC_samples = get_ADC_samples();
-				uint32_t left_max = 0;
-				uint32_t right_max = 0;
-				uint32_t left_min = 5000;
-				uint32_t right_min = 5000;
-				for (int i = 0; i < get_ADC_NUMS(); i++){
-					if (ADC_samples[2*i] > left_max){
-						left_max = ADC_samples[2*i];
-					}
-					if (ADC_samples[2*i+1] > right_max){
-						right_max = ADC_samples[2*i+1];
-					}
-					if (ADC_samples[2*i] < left_min){
-						left_min = ADC_samples[2*i];
-					}
-					if (ADC_samples[2*i+1] < right_min){
-						right_min = ADC_samples[2*i+1];
-					}
-				}
-				//display result
-				const uint32_t Y_OFFSET = 260;
-				const uint32_t X_SIZE = 240;
-				uint32_t data;
-				uint32_t data_last;
-				/* Clear the display */
-				BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-				BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
-				/* Write first 2 samples as numbers */
-				BSP_LCD_SetFont(&Font24);
-				BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-				BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-				char text[16];
-				snprintf(text, 15, "LEFT: %4d", (int)(left_max-left_min));
-				BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
-				snprintf(text, 15, "RIGHT: %4d", (int)(right_max-right_min));
-				BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
-				HAL_Delay(200);
+								uint32_t left_max = 0;
+								uint32_t right_max = 0;
+								uint32_t left_min = 5000;
+								uint32_t right_min = 5000;
+								uint32_t value_left = 0;
+								uint32_t value_right = 0;
+								value_left = measure_current_HAL_Left();
+								value_right = measure_current_HAL_Right();
+								//display result
+								const uint32_t Y_OFFSET = 260;
+								const uint32_t X_SIZE = 240;
+								uint32_t data;
+								uint32_t data_last;
+								/* Clear the display */
+								BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+								BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
+								/* Write first 2 samples as numbers */
+								BSP_LCD_SetFont(&Font24);
+								BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+								BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+								char text[16];
+								snprintf(text, 15, "LEFT: %4d", (int)(value_left));
+								BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
+								snprintf(text, 15, "RIGHT: %4d", (int)(value_right));
+								BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
+								HAL_Delay(200);
 
 			}
+
 			break;
 		default:						// Should never occur
 			break;
