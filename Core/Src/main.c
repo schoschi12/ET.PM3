@@ -24,6 +24,7 @@
 #include "pushbutton.h"
 #include "menu.h"
 #include "measuring.h"
+#include "distance.h"
 
 
 /******************************************************************************
@@ -101,6 +102,8 @@ int main(void) {
 		/* Comment next line if touchscreen interrupt is enabled */
 		MENU_check_transition();
 
+		int counter = 0;
+
 		switch (MENU_get_transition()) {	// Handle user menu choice
 		case MENU_NONE:					// No transition => do nothing
 			break;
@@ -128,7 +131,7 @@ int main(void) {
 			while(1){
 				ADC3_IN13_IN4_scan_init();
 				ADC3_IN13_IN4_scan_start();
-				while(MEAS_data_ready = false);
+				while(MEAS_data_ready == false);
 				MEAS_data_ready = false;
 				uint32_t *ADC_samples = get_ADC_samples();
 				uint32_t left_max = 0;
@@ -166,6 +169,8 @@ int main(void) {
 				BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
 				snprintf(text, 15, "RIGHT: %4d", (int)(right_max-right_min));
 				BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
+				draw_arrow(counter, (BSP_LCD_GetXSize() / 2 - 25), 100);
+				counter++;
 				HAL_Delay(200);
 
 			}
