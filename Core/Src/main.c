@@ -176,14 +176,12 @@ int main(void) {
 			while(1)
 			{
 				uint32_t *ADC_samples = get_ADC_samples();
-								uint32_t left_max = 0;
-								uint32_t right_max = 0;
-								uint32_t left_min = 5000;
-								uint32_t right_min = 5000;
-								uint32_t value_left = 0;
-								uint32_t value_right = 0;
-								value_left = measure_current_HAL_Left();
-								value_right = measure_current_HAL_Right();
+
+				uint32_t current_left = 0;
+				uint32_t current_right = 0;
+
+				measure_current_HAL(&current_left, &current_right);
+
 								//display result
 								const uint32_t Y_OFFSET = 260;
 								const uint32_t X_SIZE = 240;
@@ -197,9 +195,9 @@ int main(void) {
 								BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 								BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 								char text[16];
-								snprintf(text, 15, "LEFT: %4d", (int)(value_left));
+								snprintf(text, 15, "LEFT: %4d", (int)(current_left));
 								BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
-								snprintf(text, 15, "RIGHT: %4d", (int)(value_right));
+								snprintf(text, 15, "RIGHT: %4d", (int)(current_right));
 								BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
 								HAL_Delay(200);
 

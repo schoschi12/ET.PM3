@@ -45,12 +45,8 @@ void ADC2_IN13_IN5_scan_init(void);
 void ADC2_IN13_IN5_scan_start(void);
 void ADC3_IN13_IN4_scan_init(void);
 void ADC3_IN13_IN4_scan_start(void);
-void ADC3_IN6_DMA_init(void); //for current measurement
-void ADC3_IN6_DMA_start(void);
-void ADC3_IN11_DMA_init(void);
-void ADC3_IN11_DMA_start(void);
-void ADC3_IN11_IN6_scan_init(void);
-void ADC3_IN11_IN6_scan_start(void);
+void ADC3_scan_init(unsigned long channel1, unsigned long channel2);//new modular
+void ADC3_scan_start(void);
 uint32_t *get_ADC_samples(void);
 int get_ADC_NUMS(void);
 

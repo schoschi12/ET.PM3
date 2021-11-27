@@ -13,78 +13,29 @@
 #include "strommessung.h"
 #include "measuring.h"
 
-uint32_t measure_current_HAL_Left()
+void measure_current_HAL(uint32_t *current_left, uint32_t *current_right)
 {
-	ADC3_IN6_DMA_init();
-	ADC3_IN6_DMA_start();
-					uint32_t *ADC_samples = get_ADC_samples();
-					uint32_t left_max = 0;
-					uint32_t right_max = 0;
-					uint32_t left_min = 5000;
-					uint32_t right_min = 5000;
-					for (int i = 0; i < get_ADC_NUMS(); i++){
-						if (ADC_samples[2*i] > left_max){
-							left_max = ADC_samples[2*i];
-						}
-						if (ADC_samples[2*i+1] > right_max){
-							right_max = ADC_samples[2*i+1];
-						}
-						if (ADC_samples[2*i] < left_min){
-							left_min = ADC_samples[2*i];
-						}
-						if (ADC_samples[2*i+1] < right_min){
-							right_min = ADC_samples[2*i+1];
-						}
+	ADC3_scan_init(11,6);
+	ADC3_scan_start();
 
-					}
-		return (left_max-left_min);
-}
-uint32_t measure_current_HAL_Right()
-{
-//	 ADC3_IN11_IN6_scan_init();
-//	 ADC3_IN11_IN6_scan_start();
-//		uint32_t *ADC_samples = get_ADC_samples();
-//		uint32_t left_max = 0;
-//		uint32_t right_max = 0;
-//		uint32_t left_min = 5000;
-//		uint32_t right_min = 5000;
-//		for (int i = 0; i < get_ADC_NUMS(); i++){
-//			if (ADC_samples[2*i] > left_max){
-//				left_max = ADC_samples[2*i];
-//			}
-//			if (ADC_samples[2*i+1] > right_max){
-//				right_max = ADC_samples[2*i+1];
-//			}
-//			if (ADC_samples[2*i] < left_min){
-//				left_min = ADC_samples[2*i];
-//			}
-//			if (ADC_samples[2*i+1] < right_min){
-//				right_min = ADC_samples[2*i+1];
-//			}
-//
-//		}
-//		return (right_max-right_min);
-	ADC3_IN11_DMA_init();
-	ADC3_IN11_DMA_start();
-						uint32_t *ADC_samples = get_ADC_samples();
-						uint32_t left_max = 0;
-						uint32_t right_max = 0;
-						uint32_t left_min = 5000;
-						uint32_t right_min = 5000;
-						for (int i = 0; i < get_ADC_NUMS(); i++){
-							if (ADC_samples[2*i] > left_max){
-								left_max = ADC_samples[2*i];
-							}
-							if (ADC_samples[2*i+1] > right_max){
-								right_max = ADC_samples[2*i+1];
-							}
-							if (ADC_samples[2*i] < left_min){
-								left_min = ADC_samples[2*i];
-							}
-							if (ADC_samples[2*i+1] < right_min){
-								right_min = ADC_samples[2*i+1];
-							}
+	uint32_t *ADC_samples = get_ADC_samples();
+	uint32_t sum_channel_left = 0;
+	uint32_t sum_channel_right = 0;
 
-						}
-			return (right_max-right_min);
+	for (int i = 0; i < (2*get_ADC_NUMS()+1); i+=2)
+	{
+		sum_channel_left = sum_channel_left + ADC_samples[i];
+	}
+
+	sum_channel_left = sum_channel_left/60;	//Average over 60 measurements
+
+	for (int i = 1; i < (2*get_ADC_NUMS()+1); i+=2)
+	{
+		sum_channel_right = sum_channel_right + ADC_samples[i];
+	}
+
+	sum_channel_right = sum_channel_right/60;
+
+	*current_left = sum_channel_left;
+	*current_right = sum_channel_right;
 }
