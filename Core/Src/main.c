@@ -25,6 +25,7 @@
 #include "menu.h"
 #include "measuring.h"
 #include "strommessung.h"
+#include "distance.h"
 
 
 /******************************************************************************
@@ -113,6 +114,8 @@ int main(void) {
 
 		/* Comment next line if touchscreen interrupt is enabled */
 		MENU_check_transition();
+
+		int counter = 0;
 
 		switch (MENU_get_transition()) {	// Handle user menu choice
 		case MENU_NONE:					// No transition => do nothing
@@ -224,7 +227,6 @@ int main(void) {
 							 sTime.Seconds = 0;
 							 HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
 						 }
-
 			}
 
 			break;
