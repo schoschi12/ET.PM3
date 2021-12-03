@@ -67,8 +67,8 @@
  * Defines
  *****************************************************************************/
 #define ADC_DAC_RES		12			///< Resolution
-#define ADC_NUMS		60			///< Number of samples
-#define ADC_FS			600	///< Sampling freq. => 12 samples for a 50Hz period
+#define ADC_NUMS		120			///< Number of samples
+#define ADC_FS			1200	///< Sampling freq. => 12 samples for a 50Hz period
 #define ADC_CLOCK		84000000	///< APB2 peripheral clock frequency
 #define ADC_CLOCKS_PS	15			///< Clocks/sample: 3 hold + 12 conversion
 #define TIM_CLOCK		84000000	///< APB1 timer clock frequency

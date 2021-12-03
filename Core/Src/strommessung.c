@@ -24,7 +24,11 @@ void measure_current_HAL(uint32_t *current_left, uint32_t *current_right)
 
 	for (int i = 0; i < (2*get_ADC_NUMS()+1); i+=2)
 	{
-		sum_channel_left = sum_channel_left + ADC_samples[i];
+		for(int j = 0; j < 4; j++ )
+		{
+			sum_channel_left = sum_channel_left + ADC_samples[i];
+		}
+
 	}
 
 	sum_channel_left = sum_channel_left/60;	//Average over 60 measurements

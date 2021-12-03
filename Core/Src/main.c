@@ -35,14 +35,16 @@
 /******************************************************************************
  * Variables
  *****************************************************************************/
-
+RTC_HandleTypeDef hrtc;
+#define RtcHandle &hrtc
 
 /******************************************************************************
  * Functions
  *****************************************************************************/
 static void SystemClock_Config(void);	///< System Clock Configuration
 static void gyro_disable(void);			///< Disable the onboard gyroscope
-
+static void MX_RTC_Init(void);
+static void MX_GPIO_Init(void);
 
 /** ***************************************************************************
  * @brief  Main function
@@ -78,6 +80,16 @@ int main(void) {
 
 	MEAS_GPIO_analog_init();			// Configure GPIOs in analog mode
 	MEAS_timer_init();					// Configure the timer
+
+	MX_GPIO_Init();
+	MX_RTC_Init();						// Configure RTC
+
+    RTC_TimeTypeDef sTime;
+
+    sTime.Hours = 1;
+    sTime.Minutes = 1;
+    sTime.Seconds = 0;
+    HAL_RTC_SetTime(RtcHandle, &sTime, RTC_FORMAT_BCD);
 
 	/* Infinite while loop */
 	while (1) {							// Infinitely loop in main function
@@ -201,6 +213,18 @@ int main(void) {
 								BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
 								HAL_Delay(200);
 
+					 HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
+
+					 if(sTime.Seconds > 5)
+						 {
+							 HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_14);
+						//	 HAL_Delay(500);
+							 sTime.Hours = 1;
+							 sTime.Minutes = 1;
+							 sTime.Seconds = 0;
+							 HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
+						 }
+
 			}
 
 			break;
@@ -225,7 +249,9 @@ static void SystemClock_Config(void){
 	__HAL_RCC_PWR_CLK_ENABLE();
 	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 	/* Initialize High Speed External Oscillator and PLL circuits */
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	//RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.LSIState = RCC_LSI_ON;
 	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -243,10 +269,11 @@ static void SystemClock_Config(void){
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 	HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 	/* Initialize PLL and clock divider for the LCD */
-	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC|RCC_PERIPHCLK_RTC;
 	PeriphClkInitStruct.PLLSAI.PLLSAIN = 192;
 	PeriphClkInitStruct.PLLSAI.PLLSAIR = 4;
 	PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_8;
+	 PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
 	HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 	/* Set clock prescaler for ADCs */
 	ADC->CCR |= ADC_CCR_ADCPRE_0;
@@ -281,3 +308,80 @@ static void gyro_disable(void)
 	HAL_Delay(10);						// Wait some time
 	GPIOF->MODER |= GPIO_MODER_MODER8_Msk; // Analog mode for PF6 = ADC3_IN4
 }
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+ void MX_RTC_Init(void)
+ {
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+   // Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+  sTime.Hours = 0x0;
+  sTime.Minutes = 0x0;
+  sTime.Seconds = 0x0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    //Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+  sDate.Month = RTC_MONTH_JANUARY;
+  sDate.Date = 0x1;
+  sDate.Year = 0x0;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    //Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
+}
+
+ void MX_GPIO_Init(void)
+ {
+	  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	 /* GPIO Ports Clock Enable */
+	   __GPIOG_CLK_ENABLE();
+
+	 /*Configure GPIO pin : PB14 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_14;
+	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;     // digital Output
+	  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+	  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+ }
+
