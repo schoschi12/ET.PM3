@@ -190,43 +190,9 @@ int main(void) {
 //			}
 			while(1)
 			{
-				uint32_t *ADC_samples = get_ADC_samples();
-
-				uint32_t current_left = 0;
-				uint32_t current_right = 0;
-
-				measure_current_HAL(&current_left, &current_right);
-
-								//display result
-								const uint32_t Y_OFFSET = 260;
-								const uint32_t X_SIZE = 240;
-								uint32_t data;
-								uint32_t data_last;
-								/* Clear the display */
-								BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-								BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
-								/* Write first 2 samples as numbers */
-								BSP_LCD_SetFont(&Font24);
-								BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-								BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-								char text[16];
-								snprintf(text, 15, "LEFT: %4d", (int)(current_left));
-								BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
-								snprintf(text, 15, "RIGHT: %4d", (int)(current_right));
-								BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
-								HAL_Delay(200);
-
-					 HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
-
-					 if(sTime.Seconds > 5)
-						 {
-							 HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_14);
-						//	 HAL_Delay(500);
-							 sTime.Hours = 1;
-							 sTime.Minutes = 1;
-							 sTime.Seconds = 0;
-							 HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
-						 }
+				measure_distance();
+				HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
+				HAL_Delay(200);
 			}
 
 			break;
