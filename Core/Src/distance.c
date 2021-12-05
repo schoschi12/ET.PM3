@@ -6,29 +6,46 @@ float sine;
 float cosine;
 int x_int;
 int y_int;
-float distanceLUT[10][10] = { { 3760, 3650, 3275, 2750, 2475, 2175, 2025, 1925,
-		1800, 1575, 1450 }, { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 } };
+uint16_t amplitudeLUT[] = { 3760, 3650, 3275, 2750, 2475, 2175, 2025, 1925, 1800, 1575, 1450};
+uint16_t distanceLUT[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+float factorLUT[] = {0.5, 0.75, 1, 1.25, 1.5};
+int angleLUT[] = {-90, -45, 0, 45, 90};
 static float distance;
-static float direction;
+static float angle;
 
 void calc_distance(uint16_t left, uint16_t right) {
 	int index = 0;
 	float average = ((float) left + (float) right) / 2;
-	while (average < distanceLUT[0][index]
-			&& index < (sizeof(distanceLUT[0]) - 1)) {
+	while (average < amplitudeLUT[index] && index < (sizeof(distanceLUT) / 2 - 2)) {
 		index++;
 	}
-	if ((distanceLUT[0][index] - average)
-			< (average - distanceLUT[0][index + 1])) {
-		distance = distanceLUT[1][index];
+	if ((amplitudeLUT[index] - average)
+			< (average - amplitudeLUT[index + 1])) {
+		distance = distanceLUT[index];
 	} else {
-		distance = distanceLUT[1][index + 1];
+		distance = distanceLUT[index + 1];
 	}
 	//float weight = (average - distanceLUT[0][index]) / (distanceLUT[0][index + 1] - distanceLUT[0][index]);
 	//distance = (weight * distanceLUT[1][index] + (1 - weight) * distanceLUT[1][index + 1]) / 2;
 }
 
+void calc_angle(uint16_t left, uint16_t right){
+	int index = 0;
+	float factor = (float)left / (float)right;
+	int x = sizeof(factorLUT[0]);
+	while (factor > factorLUT[index] && index < ((sizeof(factorLUT) / sizeof(factorLUT[0])) - 2)){
+		index++;
+	}
+	if ((factorLUT[index] - factor)
+				< (factor - factorLUT[index + 1])) {
+			angle = angleLUT[index];
+		} else {
+			angle = angleLUT[index + 1];
+		}
+}
+
 void draw_arrow(uint16_t direction, uint16_t x_pos, uint16_t y_pos) {
+
 	arm_sin_cos_f32((float) direction, &sine, &cosine);
 
 	for (int i = 0; i < 4; i++) {
@@ -82,6 +99,7 @@ void measure_distance() {
 	avg_left /= 10;
 
 	calc_distance(avg_left, avg_right);
+	calc_angle(avg_left, avg_right);
 
 	//display result
 	const uint32_t Y_OFFSET = 260;
@@ -97,12 +115,17 @@ void measure_distance() {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	char text[16];
 	snprintf(text, 15, "LEFT: %4d", (int) (avg_left));
-	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
+	BSP_LCD_DisplayStringAt(0, 220, (uint8_t*) text, LEFT_MODE);
 	snprintf(text, 15, "RIGHT: %4d", (int) (avg_right));
-	BSP_LCD_DisplayStringAt(0, 80, (uint8_t*) text, LEFT_MODE);
+	BSP_LCD_DisplayStringAt(0, 240, (uint8_t*) text, LEFT_MODE);
 
-	snprintf(text, 15, "Dist: %4d", (int) (distance));
-	BSP_LCD_DisplayStringAt(0, 100, (uint8_t*) text, LEFT_MODE);
+	if(distance >= 100){
+		snprintf(text, 15, "Dist: >100 mm");
+	}else{
+		snprintf(text, 15, "Dist: %4d mm", (int) (distance));
+	}
+	BSP_LCD_DisplayStringAt(0, 260, (uint8_t*) text, LEFT_MODE);
+	draw_arrow(360 + angle, ((uint16_t)(BSP_LCD_GetXSize() / 2)), 130);
 	HAL_Delay(200);
 
 }

@@ -697,7 +697,7 @@ void BSP_LCD_DrawVLine(uint16_t Xpos, uint16_t Ypos, uint16_t Length)
   
   /* Get the line address */
   xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4*(BSP_LCD_GetXSize()*Ypos + Xpos);
-  
+
   /* Write line */
   FillBuffer(ActiveLayer, (uint32_t *)xaddress, 1, Length, (BSP_LCD_GetXSize() - 1), DrawProp[ActiveLayer].TextColor);
 }
@@ -1308,8 +1308,7 @@ __weak void BSP_LCD_MspInit(void)
 void BSP_LCD_DrawPixel(uint16_t Xpos, uint16_t Ypos, uint32_t RGB_Code)
 {
   /* Write data value to all SDRAM memory */
-  //*(__IO uint32_t*) (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + (4*(Ypos*BSP_LCD_GetXSize() + Xpos))) = RGB_Code;
-  *(__IO uint32_t*) (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + 4 * (76800 - Xpos - BSP_LCD_GetXSize() * Ypos)) = RGB_Code;
+  *(__IO uint32_t*) (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + (4*(Ypos*BSP_LCD_GetXSize() + Xpos))) = RGB_Code;
 }
 
 /**
