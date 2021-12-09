@@ -137,8 +137,10 @@ int main(void) {
 			ADC1_IN13_ADC2_IN5_dual_start();
 			break;
 		case MENU_FOUR:
-			ADC2_IN13_IN5_scan_init();
-			ADC2_IN13_IN5_scan_start();
+			//ADC2_IN13_IN5_scan_init();
+			//ADC2_IN13_IN5_scan_start();
+			uint32_t current_left, current_right;
+			 measure_current_HAL( &current_left, &current_right);
 			break;
 		case MENU_FIVE:
 //			while(1){
@@ -191,8 +193,7 @@ int main(void) {
 			while(1)
 			{
 				measure_distance();
-				HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
-				HAL_Delay(200);
+				//HAL_Delay(200);
 			}
 
 			break;

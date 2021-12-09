@@ -679,7 +679,8 @@ void BSP_LCD_DrawHLine(uint16_t Xpos, uint16_t Ypos, uint16_t Length)
   uint32_t xaddress = 0;
   
   /* Get the line address */
-  xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4*(BSP_LCD_GetXSize()*Ypos + Xpos);
+  //xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4*(BSP_LCD_GetXSize()*Ypos + Xpos); ///original code
+  xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + 4 * (76800 - Xpos - BSP_LCD_GetXSize() * Ypos)); ///Rotate 180°
 
   /* Write line */
   FillBuffer(ActiveLayer, (uint32_t *)xaddress, Length, 1, 0, DrawProp[ActiveLayer].TextColor);
@@ -696,8 +697,8 @@ void BSP_LCD_DrawVLine(uint16_t Xpos, uint16_t Ypos, uint16_t Length)
   uint32_t xaddress = 0;
   
   /* Get the line address */
-  xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4*(BSP_LCD_GetXSize()*Ypos + Xpos);
-
+  //xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4*(BSP_LCD_GetXSize()*Ypos + Xpos); //original code
+  xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + 4 * (76800 - Xpos - BSP_LCD_GetXSize() * Ypos)); ///rotate 180°
   /* Write line */
   FillBuffer(ActiveLayer, (uint32_t *)xaddress, 1, Length, (BSP_LCD_GetXSize() - 1), DrawProp[ActiveLayer].TextColor);
 }
@@ -963,8 +964,8 @@ void BSP_LCD_FillRect(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Hei
   BSP_LCD_SetTextColor(DrawProp[ActiveLayer].TextColor);
 
   /* Get the rectangle start address */
-  xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4*(BSP_LCD_GetXSize()*Ypos + Xpos);
-
+  //xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4*(BSP_LCD_GetXSize()*Ypos + Xpos); ///Original Code
+  xaddress = (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress) + 4 * (-BSP_LCD_GetXSize()*(Ypos+Height) - (Xpos+Width) +76800); ///Rotate by 180°
   /* Fill the rectangle */
   FillBuffer(ActiveLayer, (uint32_t *)xaddress, Width, Height, (BSP_LCD_GetXSize() - Width), DrawProp[ActiveLayer].TextColor);
 }
@@ -1308,7 +1309,8 @@ __weak void BSP_LCD_MspInit(void)
 void BSP_LCD_DrawPixel(uint16_t Xpos, uint16_t Ypos, uint32_t RGB_Code)
 {
   /* Write data value to all SDRAM memory */
-  *(__IO uint32_t*) (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + (4*(Ypos*BSP_LCD_GetXSize() + Xpos))) = RGB_Code;
+  //*(__IO uint32_t*) (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + (4*(Ypos*BSP_LCD_GetXSize() + Xpos))) = RGB_Code; ///Original Code
+  *(__IO uint32_t*) (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + 4 * (76800 - Xpos - BSP_LCD_GetXSize() * Ypos)) = RGB_Code; ///Rotate all Pixels by 180°
 }
 
 /**

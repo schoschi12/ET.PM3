@@ -6,9 +6,10 @@ float sine;
 float cosine;
 int x_int;
 int y_int;
-uint16_t amplitudeLUT[] = { 3760, 3650, 3275, 2750, 2475, 2175, 2025, 1925, 1800, 1575, 1450};
+//uint16_t amplitudeLUT[] = {3760, 3650, 3275, 2750, 2475, 2175, 2025, 1925, 1800, 1575, 1450};
+uint16_t amplitudeLUT[] = {3800, 3722, 3585, 3400, 3143, 2837, 2630, 2475, 2370, 2304, 2180};
 uint16_t distanceLUT[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-float factorLUT[] = {0.5, 0.75, 1, 1.25, 1.5};
+float factorLUT[] = {0.29, 0.7, 1, 1.1, 1.32};
 int angleLUT[] = {-90, -45, 0, 45, 90};
 static float distance;
 static float angle;
@@ -32,7 +33,6 @@ void calc_distance(uint16_t left, uint16_t right) {
 void calc_angle(uint16_t left, uint16_t right){
 	int index = 0;
 	float factor = (float)left / (float)right;
-	int x = sizeof(factorLUT[0]);
 	while (factor > factorLUT[index] && index < ((sizeof(factorLUT) / sizeof(factorLUT[0])) - 2)){
 		index++;
 	}
@@ -114,6 +114,8 @@ void measure_distance() {
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	char text[16];
+	snprintf(text, 15, "factor: %4d",  (int)angle);
+	BSP_LCD_DisplayStringAt(0, 200, (uint8_t*) text, LEFT_MODE);
 	snprintf(text, 15, "LEFT: %4d", (int) (avg_left));
 	BSP_LCD_DisplayStringAt(0, 220, (uint8_t*) text, LEFT_MODE);
 	snprintf(text, 15, "RIGHT: %4d", (int) (avg_right));
@@ -126,6 +128,6 @@ void measure_distance() {
 	}
 	BSP_LCD_DisplayStringAt(0, 260, (uint8_t*) text, LEFT_MODE);
 	draw_arrow(360 + angle, ((uint16_t)(BSP_LCD_GetXSize() / 2)), 130);
-	HAL_Delay(200);
+
 
 }

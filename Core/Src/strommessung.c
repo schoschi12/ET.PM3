@@ -15,30 +15,40 @@
 
 void measure_current_HAL(uint32_t *current_left, uint32_t *current_right)
 {
+
+	uint32_t avg_left = 0;
+	uint32_t avg_right = 0;
+		for (int i = 0; i < 10; i++) {
 	ADC3_scan_init(11,6);
 	ADC3_scan_start();
+			while (MEAS_data_ready == false);
+			MEAS_data_ready = false;
+			uint32_t *ADC_samples = get_ADC_samples();
+			uint32_t left_max = 0;
+			uint32_t right_max = 0;
+			uint32_t left_min = 5000;
+			uint32_t right_min = 5000;
+			for (int i = 0; i < get_ADC_NUMS(); i++) {
+				if (ADC_samples[2 * i] > left_max) {
+					left_max = ADC_samples[2 * i];
+				}
+				if (ADC_samples[2 * i + 1] > right_max) {
+					right_max = ADC_samples[2 * i + 1];
+				}
+				if (ADC_samples[2 * i] < left_min) {
+					left_min = ADC_samples[2 * i];
+				}
+				if (ADC_samples[2 * i + 1] < right_min) {
+					right_min = ADC_samples[2 * i + 1];
+				}
 
-	uint32_t *ADC_samples = get_ADC_samples();
-	uint32_t sum_channel_left = 0;
-	uint32_t sum_channel_right = 0;
-
-	for (int i = 0; i < (2*get_ADC_NUMS()+1); i+=2)
-	{
-		for(int j = 0; j < 4; j++ )
-		{
-			sum_channel_left = sum_channel_left + ADC_samples[i];
+			}
+			avg_left += (left_max - left_min);
+			avg_right += (right_max - right_min);
 		}
+		avg_right /= 10; // 3000/Verstärkung (4095)
+		avg_left /= 10;
 
-	}
-
-	sum_channel_left = sum_channel_left/60;	//Average over 60 measurements
-
-	for (int i = 1; i < (2*get_ADC_NUMS()+1); i+=2)
-	{
-		sum_channel_right = sum_channel_right + ADC_samples[i];
-	}
-
-	sum_channel_right = sum_channel_right/60;
 
 	*current_left = sum_channel_left;
 	*current_right = sum_channel_right;

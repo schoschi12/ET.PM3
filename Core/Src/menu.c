@@ -173,7 +173,7 @@ void MENU_check_transition(void)
 	BSP_TS_GetState(&TS_State);			// Get the state
 #ifdef EVAL_REV_E
 // Evalboard revision E (blue) has an inverted y-axis in the touch controller
-	TS_State.Y = BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
+	TS_State.Y = TS_State.Y;//BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
 #endif
 	if (TS_State.TouchDetected) {		// If a touch was detected
 		/* Do only if last transition not pending anymore */
@@ -181,7 +181,7 @@ void MENU_check_transition(void)
 			item_old = item_new;		// Store old item
 			/* If touched within the menu bar? */
 			if ((MENU_Y < TS_State.Y) && (MENU_Y+MENU_HEIGHT > TS_State.Y)) {
-				item_new = TS_State.X	// Calculate new item
+				item_new = (BSP_LCD_GetXSize() - TS_State.X)	// Calculate new item
 						/ (BSP_LCD_GetXSize()/MENU_ENTRY_COUNT);
 				if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
 					item_new = MENU_NONE;	// Out of bounds
