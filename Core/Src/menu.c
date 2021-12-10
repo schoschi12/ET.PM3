@@ -49,7 +49,7 @@ static MENU_entry_t MENU_entry[MENU_ENTRY_COUNT] = {
 		{"Timer",	"+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTGREEN},
 		{"DMA",	    "+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTRED},
 		{"DMA",	    "dual",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTCYAN},
-		{"DMA",	    "scan",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTMAGENTA},
+		{"B-",	    "field",	LCD_COLOR_BLACK,	LCD_COLOR_LIGHTMAGENTA},
 		{"E-",		"field",	LCD_COLOR_BLACK,	LCD_COLOR_LIGHTYELLOW}
 };										///< All the menu entries
 
