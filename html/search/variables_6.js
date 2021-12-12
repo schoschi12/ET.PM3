@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['line1_0',['line1',['../struct_m_e_n_u__entry__t.html#ae1acd6e390dd5194d11208034acb8d91',1,'MENU_entry_t']]],
-  ['line2_1',['line2',['../struct_m_e_n_u__entry__t.html#a94cbcf18d647f9987b421714c2dc5147',1,'MENU_entry_t']]]
+  ['meas_5fdata_5fready_0',['MEAS_data_ready',['../measuring_8h.html#a8307c93a35eebeec45eac55648b0f606',1,'MEAS_data_ready():&#160;measuring.c'],['../measuring_8c.html#a8307c93a35eebeec45eac55648b0f606',1,'MEAS_data_ready():&#160;measuring.c']]],
+  ['meas_5finput_5fcount_1',['MEAS_input_count',['../measuring_8h.html#a8efb445edd5e405be589571376a57b56',1,'MEAS_input_count():&#160;measuring.h'],['../measuring_8c.html#a8efb445edd5e405be589571376a57b56',1,'MEAS_input_count():&#160;measuring.c']]],
+  ['menu_5fentry_2',['MENU_entry',['../menu_8c.html#a95a264bf1d48a89c6aa839d0156f91ec',1,'menu.c']]],
+  ['menu_5ftransition_3',['MENU_transition',['../menu_8c.html#a0a4f3ba8c89acebbaf361de6a4cc3d94',1,'menu.c']]]
 ];

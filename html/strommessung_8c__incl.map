@@ -1,0 +1,11 @@
+<map id="Src/strommessung.c" name="Src/strommessung.c">
+<area shape="rect" id="node1" title="calculates distance and angle and displays them" alt="" coords="150,5,293,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="52,244,127,271"/>
+<area shape="rect" id="node3" title=" " alt="" coords="410,155,556,196"/>
+<area shape="rect" id="node4" href="$strommessung_8h.html" title="See strommessung.c." alt="" coords="30,80,149,107"/>
+<area shape="rect" id="node5" href="$measuring_8h.html" title="See measuring.c." alt="" coords="127,162,220,189"/>
+<area shape="rect" id="node7" href="$distance_8h.html" title="See distance.c." alt="" coords="315,80,398,107"/>
+<area shape="rect" id="node9" href="$menu_8h.html" title="See menu.c." alt="" coords="225,80,290,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="188,244,253,271"/>
+<area shape="rect" id="node8" title=" " alt="" coords="295,162,386,189"/>
+</map>

@@ -47,8 +47,8 @@
  *
  *
  * ----------------------------------------------------------------------------
- * @author Hanspeter Hochreutener, hhrt@zhaw.ch
- * @date 17.06.2021
+ * @author Janosch Dusoczky
+ * @date 12.12.2021
  *****************************************************************************/
 
 /******************************************************************************
@@ -157,58 +157,6 @@ void ADC_reset(void) {
 	RCC->APB2RSTR |= RCC_APB2RSTR_ADCRST;	// Reset ADCs
 	RCC->APB2RSTR &= ~RCC_APB2RSTR_ADCRST;	// Release reset of ADCs
 	TIM2->CR1 &= ~TIM_CR1_CEN;				// Disable timer
-}
-
-void MEAS_show_data_current(double current) {
-	const uint32_t Y_OFFSET = 280;
-	const uint32_t X_SIZE = 240;
-	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1; // Scaling factor
-	uint32_t data;
-	uint32_t data_last;
-	/* Clear the display */
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(0, 40, X_SIZE, Y_OFFSET + 1);
-	/* Write first 2 samples as numbers */
-	BSP_LCD_SetFont(&Font24);
-	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	char text[16];
-	snprintf(text, 15, "current %.2lfA", current);
-	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
-// snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
-// BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
-	/* Draw the values of input channel 1 as a curve */
-	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-	data = ADC_samples[MEAS_input_count * 0] / f;
-	for (uint32_t i = 1; i < ADC_NUMS; i++) {
-		data_last = data;
-		data = (ADC_samples[MEAS_input_count * i]) / f;
-		if (data > Y_OFFSET) {
-			data = Y_OFFSET;
-		} // Limit value, prevent crash
-		BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
-				Y_OFFSET - data);
-	}
-	/* Draw the values of input channel 2 (if present) as a curve */
-	if (MEAS_input_count == 2) {
-		BSP_LCD_SetTextColor(LCD_COLOR_RED);
-		data = ADC_samples[MEAS_input_count * 0 + 1] / f;
-		for (uint32_t i = 1; i < ADC_NUMS; i++) {
-			data_last = data;
-			data = (ADC_samples[MEAS_input_count * i + 1]) / f;
-			if (data > Y_OFFSET) {
-				data = Y_OFFSET;
-			} // Limit value, prevent crash
-			BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
-					Y_OFFSET - data);
-		}
-	}
-	/* Clear buffer and flag */
-	for (uint32_t i = 0; i < ADC_NUMS; i++) {
-		ADC_samples[2 * i] = 0;
-		ADC_samples[2 * i + 1] = 0;
-	}
-	ADC_sample_count = 0;
 }
 
 /** ***************************************************************************
@@ -657,9 +605,7 @@ void DMA2_Stream4_IRQHandler(void) {
 }
 
 /** ***************************************************************************
- * @brief Draw buffer data as curves
- *
- * and write the first two samples as numbers.
+ * @brief Draw buffer data as curves and write the first two samples as numbers.
  * @n After drawing, the buffer is cleared to get ready for the next run.
  * @note Drawing outside of the display crashes the system!
  * @todo Create new .h and .c files for calculating and displaying
@@ -686,6 +632,102 @@ void MEAS_show_data(void) {
 	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
 	snprintf(text, 15, "2. sample %4d", (int) (ADC_samples[1]));
 	BSP_LCD_DisplayStringAt(0, 80, (uint8_t*) text, LEFT_MODE);
+	/* Draw the  values of input channel 1 as a curve */
+	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+	data = ADC_samples[MEAS_input_count * 0] / f;
+	for (uint32_t i = 1; i < ADC_NUMS; i++) {
+		data_last = data;
+		data = (ADC_samples[MEAS_input_count * i]) / f;
+		if (data > Y_OFFSET) {
+			data = Y_OFFSET;
+		}	// Limit value, prevent crash
+		BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
+				Y_OFFSET - data);
+	}
+	/* Draw the  values of input channel 2 (if present) as a curve */
+	if (MEAS_input_count == 2) {
+		BSP_LCD_SetTextColor(LCD_COLOR_RED);
+		data = ADC_samples[MEAS_input_count * 0 + 1] / f;
+		for (uint32_t i = 1; i < ADC_NUMS; i++) {
+			data_last = data;
+			data = (ADC_samples[MEAS_input_count * i + 1]) / f;
+			if (data > Y_OFFSET) {
+				data = Y_OFFSET;
+			}	// Limit value, prevent crash
+			BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
+					Y_OFFSET - data);
+		}
+	}
+	/* Clear buffer and flag */
+	for (uint32_t i = 0; i < ADC_NUMS; i++) {
+		ADC_samples[2 * i] = 0;
+		ADC_samples[2 * i + 1] = 0;
+	}
+	ADC_sample_count = 0;
+}
+
+/**
+ * @brief Applies 5 point moving average tovalues in ADC_DMA buffer.
+ *
+ * Calculates difference between maximum and minimum value.
+ *
+ * @param pointer where amplitude of left sensing pad is to be stored.
+ * @param pointer where amplitude of right sensing pad is to be stored.
+ */
+void MEAS_average(uint32_t *avg_left, uint32_t *avg_right) {
+	uint32_t *ADC_samples = get_ADC_samples();
+	uint32_t left_max = 0;
+	uint32_t right_max = 0;
+	uint32_t left_min = 5000;
+	uint32_t right_min = 5000;
+	double left_value, right_value;
+	int mov_avg = 4;
+	for (int i = 2; i < (get_ADC_NUMS() - 2); i++) {
+		left_value = (ADC_samples[2 * (i - 2) + 1]
+				+ ADC_samples[2 * (i - 1) + 1] + ADC_samples[2 * i + 1]
+				+ ADC_samples[2 * (i + 1) + 1] + ADC_samples[2 * (i + 2) + 1])
+				/ 5;
+		right_value = (ADC_samples[2 * (i - 2)] + ADC_samples[2 * (i - 1)]
+				+ ADC_samples[2 * i] + ADC_samples[2 * (i + 1)]
+				+ ADC_samples[2 * (i + 2)]) / 5;
+
+		if ((uint32_t) left_value > left_max) {
+			left_max = (uint32_t) left_value;
+		}
+		if ((uint32_t) right_value > right_max) {
+			right_max = (uint32_t) right_value;
+		}
+		if ((uint32_t) left_value < left_min) {
+			left_min = (uint32_t) left_value;
+		}
+		if ((uint32_t) right_value < right_min) {
+			right_min = (uint32_t) right_value;
+		}
+
+	}
+	*avg_left += (left_max - left_min);
+	*avg_right += (right_max - right_min);
+}
+
+
+void MEAS_show_data_current(double current) {
+	const uint32_t Y_OFFSET = 280;
+	const uint32_t X_SIZE = 240;
+	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;	// Scaling factor
+	uint32_t data;
+	uint32_t data_last;
+	/* Clear the display */
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(0, 40, X_SIZE, Y_OFFSET + 1);
+	/* Write first 2 samples as numbers */
+	BSP_LCD_SetFont(&Font24);
+	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	char text[16];
+	snprintf(text, 15, "current %.2lfA", current);
+	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
+//	snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
+//	BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
 	/* Draw the  values of input channel 1 as a curve */
 	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
 	data = ADC_samples[MEAS_input_count * 0] / f;

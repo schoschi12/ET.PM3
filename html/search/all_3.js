@@ -5,7 +5,7 @@ var searchData=
   ['dac_5finit_2',['DAC_init',['../measuring_8h.html#a4500c15ee6b13637e00fd6b901b60224',1,'DAC_init(void):&#160;measuring.c'],['../measuring_8c.html#a4500c15ee6b13637e00fd6b901b60224',1,'DAC_init(void):&#160;measuring.c']]],
   ['dac_5freset_3',['DAC_reset',['../measuring_8h.html#a0ec0c70d77844e92e6b1862ab7fc7fb8',1,'DAC_reset(void):&#160;measuring.c'],['../measuring_8c.html#a0ec0c70d77844e92e6b1862ab7fc7fb8',1,'DAC_reset(void):&#160;measuring.c']]],
   ['dac_5fsample_4',['DAC_sample',['../measuring_8c.html#a8da5353c93f5798cf6c95956418a2210',1,'measuring.c']]],
-  ['demo_2dcode_5',['Demo-Code',['../index.html',1,'']]],
+  ['dispay_5fcurrent_5',['dispay_current',['../main_8c.html#abfce598ae1a5fd1cd4f563601d13890c',1,'main.c']]],
   ['distance_6',['distance',['../distance_8c.html#a06f14a9abd47b91465f895d5259cdc1b',1,'distance.c']]],
   ['distance_2ec_7',['distance.c',['../distance_8c.html',1,'']]],
   ['distance_2eh_8',['distance.h',['../distance_8h.html',1,'']]],

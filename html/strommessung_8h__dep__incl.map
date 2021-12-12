@@ -1,0 +1,5 @@
+<map id="Inc/strommessung.h" name="Inc/strommessung.h">
+<area shape="rect" id="node1" title="See strommessung.c." alt="" coords="47,5,187,32"/>
+<area shape="rect" id="node2" href="$main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="5,80,91,107"/>
+<area shape="rect" id="node3" href="$strommessung_8c.html" title="calculates distance and angle and displays them" alt="" coords="115,80,258,107"/>
+</map>

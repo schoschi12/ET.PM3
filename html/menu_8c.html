@@ -96,7 +96,7 @@ Include dependency graph for menu.c:</div>
 <area shape="rect" title=" " alt="" coords="475,87,650,114"/>
 <area shape="rect" href="main_8h.html" title="See main.c." alt="" coords="675,87,736,114"/>
 <area shape="rect" href="menu_8h.html" title="See menu.c." alt="" coords="761,87,826,114"/>
-<area shape="rect" title=" " alt="" coords="761,169,826,196"/>
+<area shape="rect" title=" " alt="" coords="717,169,782,196"/>
 </map>
 </div>
 </div>
@@ -327,14 +327,16 @@ Here is the caller graph for this function:</div>
 <p >Each menu entry has two lines. Text and background colors are applied. <br  />
  These attributes are defined in the variable MENU_draw[]. </p>
 
-<p class="definition">Definition at line <a class="el" href="menu_8c_source.html#l00069">69</a> of file <a class="el" href="menu_8c_source.html">menu.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="menu_8c_source.html#l00065">65</a> of file <a class="el" href="menu_8c_source.html">menu.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="menu_8c_a2cbb4c209c599e91da57c0d6cf8f710e_icgraph.png" border="0" usemap="#amenu_8c_a2cbb4c209c599e91da57c0d6cf8f710e_icgraph" alt=""/></div>
 <map name="amenu_8c_a2cbb4c209c599e91da57c0d6cf8f710e_icgraph" id="amenu_8c_a2cbb4c209c599e91da57c0d6cf8f710e_icgraph">
-<area shape="rect" title="Draw the menu onto the display." alt="" coords="104,5,199,32"/>
-<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
+<area shape="rect" title="Draw the menu onto the display." alt="" coords="303,25,397,52"/>
+<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,25,56,52"/>
+<area shape="rect" href="strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1" title="measures the current and displays it" alt="" coords="104,25,255,52"/>
+<area shape="rect" href="distance_8c.html#a0476c1fe6e5721d29eab9c4e6934e495" title="measures the distance and displays it" alt="" coords="115,76,243,103"/>
 </map>
 </div>
 
@@ -423,7 +425,7 @@ Here is the caller graph for this function:</div>
 <p>Shows a hint at startup. </p>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="menu_8c_source.html#l00095">95</a> of file <a class="el" href="menu_8c_source.html">menu.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="menu_8c_source.html#l00090">90</a> of file <a class="el" href="menu_8c_source.html">menu.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -498,12 +500,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        {<span class="stringliteral">&quot;sin-&quot;</span>,    <span class="stringliteral">&quot;gle&quot;</span>,      LCD_COLOR_BLACK,    LCD_COLOR_LIGHTBLUE},</div>
-<div class="line">        {<span class="stringliteral">&quot;Timer&quot;</span>,   <span class="stringliteral">&quot;+IRQ&quot;</span>,     LCD_COLOR_BLACK,    LCD_COLOR_LIGHTGREEN},</div>
-<div class="line">        {<span class="stringliteral">&quot;DMA&quot;</span>,     <span class="stringliteral">&quot;+IRQ&quot;</span>,     LCD_COLOR_BLACK,    LCD_COLOR_LIGHTRED},</div>
-<div class="line">        {<span class="stringliteral">&quot;DMA&quot;</span>,     <span class="stringliteral">&quot;dual&quot;</span>,     LCD_COLOR_BLACK,    LCD_COLOR_LIGHTCYAN},</div>
-<div class="line">        {<span class="stringliteral">&quot;B-&quot;</span>,      <span class="stringliteral">&quot;field&quot;</span>,    LCD_COLOR_BLACK,    LCD_COLOR_LIGHTMAGENTA},</div>
-<div class="line">        {<span class="stringliteral">&quot;E-&quot;</span>,      <span class="stringliteral">&quot;field&quot;</span>,    LCD_COLOR_BLACK,    LCD_COLOR_LIGHTYELLOW}</div>
+<div class="line">        {<span class="stringliteral">&quot;Single&quot;</span>,  <span class="stringliteral">&quot;distance&quot;</span>, LCD_COLOR_BLACK,    LCD_COLOR_RED},</div>
+<div class="line">        {<span class="stringliteral">&quot;Accurate&quot;</span>, <span class="stringliteral">&quot;distance&quot;</span>,LCD_COLOR_BLACK,    LCD_COLOR_GREEN},</div>
+<div class="line">        {<span class="stringliteral">&quot;Current&quot;</span>,  <span class="stringliteral">&quot;[I] = A&quot;</span>, LCD_COLOR_BLACK,    LCD_COLOR_BLUE}</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 <p>All the menu entries. </p>

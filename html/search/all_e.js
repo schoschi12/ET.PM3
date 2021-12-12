@@ -9,5 +9,6 @@ var searchData=
   ['tim_5fprescale_6',['TIM_PRESCALE',['../measuring_8c.html#ad3224fe94be10ed1c61870bd1d22b86d',1,'measuring.c']]],
   ['tim_5ftim7_5fperiodicconfig_7',['tim_TIM7_periodicConfig',['../main_8c.html#a07271e0193c87c243ab6671fa1d4c6bc',1,'main.c']]],
   ['tim_5ftop_8',['TIM_TOP',['../measuring_8c.html#a00237ed21338f907db7d88aeb54fecf2',1,'measuring.c']]],
-  ['todo_20list_9',['Todo List',['../todo.html',1,'']]]
+  ['timer_5fvalue_5fms_9',['timer_value_ms',['../main_8c.html#a5be5cb321b3cb99868ea12f6b37fcddd',1,'main.c']]],
+  ['todo_20list_10',['Todo List',['../todo.html',1,'']]]
 ];

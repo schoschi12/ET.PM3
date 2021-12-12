@@ -1,0 +1,6 @@
+<map id="ADC3_scan_start" name="ADC3_scan_start">
+<area shape="rect" id="node1" title="Start DMA, ADC and timer." alt="" coords="303,31,427,57"/>
+<area shape="rect" id="node2" href="$strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1" title="measures the current and displays it" alt="" coords="104,5,255,32"/>
+<area shape="rect" id="node4" href="$distance_8c.html#a0476c1fe6e5721d29eab9c4e6934e495" title="measures the distance and displays it" alt="" coords="115,56,243,83"/>
+<area shape="rect" id="node3" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,31,56,57"/>
+</map>

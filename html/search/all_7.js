@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hrtc_0',['hrtc',['../main_8c.html#aa0c7fca836406ade332e1e3f1039d8ab',1,'main.c']]]
+  ['initiate_5fshutdown_0',['initiate_shutdown',['../main_8c.html#afa48a38a8de8c1db68965784d41736c8',1,'main.c']]]
 ];

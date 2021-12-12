@@ -73,61 +73,92 @@ $(function() {
   <div class="headertitle"><div class="title">strommessung.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>calculates distance and angle and displays them  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &quot;stm32f429i_discovery_lcd.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="strommessung_8h_source.html">strommessung.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="measuring_8h_source.html">measuring.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="distance_8h_source.html">distance.h</a>&quot;</code><br />
-<code>#include &quot;math.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="menu_8h_source.html">menu.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for strommessung.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="strommessung_8c__incl.png" border="0" usemap="#a_src_2strommessung_8c" alt=""/></div>
+<map name="a_src_2strommessung_8c" id="a_src_2strommessung_8c">
+<area shape="rect" title="calculates distance and angle and displays them" alt="" coords="150,5,293,32"/>
+<area shape="rect" title=" " alt="" coords="52,244,127,271"/>
+<area shape="rect" title=" " alt="" coords="410,155,556,196"/>
+<area shape="rect" href="strommessung_8h.html" title="See strommessung.c." alt="" coords="30,80,149,107"/>
+<area shape="rect" href="measuring_8h.html" title="See measuring.c." alt="" coords="127,162,220,189"/>
+<area shape="rect" href="distance_8h.html" title="See distance.c." alt="" coords="315,80,398,107"/>
+<area shape="rect" href="menu_8h.html" title="See menu.c." alt="" coords="225,80,290,107"/>
+<area shape="rect" title=" " alt="" coords="188,244,253,271"/>
+<area shape="rect" title=" " alt="" coords="295,162,386,189"/>
+</map>
 </div>
 </div>
 <p><a href="strommessung_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a732d5cce4b9293bb93fe9bceced5f16c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="strommessung_8c.html#a732d5cce4b9293bb93fe9bceced5f16c">measure_current_HAL</a> (uint32_t *current_left, uint32_t *current_right)</td></tr>
-<tr class="separator:a732d5cce4b9293bb93fe9bceced5f16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a1b3983be6c858213f717b52b6cc5f1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1">measure_current_HAL</a> (void)</td></tr>
+<tr class="memdesc:a0a1b3983be6c858213f717b52b6cc5f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">measures the current and displays it  <a href="strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1">More...</a><br /></td></tr>
+<tr class="separator:a0a1b3983be6c858213f717b52b6cc5f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a732d5cce4b9293bb93fe9bceced5f16c" name="a732d5cce4b9293bb93fe9bceced5f16c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a732d5cce4b9293bb93fe9bceced5f16c">&#9670;&nbsp;</a></span>measure_current_HAL()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >calculates distance and angle and displays them </p>
+<hr  />
+<p >Contains the calibration table for distance and angle measurement. Initiates measurement, calculates average and displays the values to the display.</p>
+<dl class="section author"><dt>Author</dt><dd>Luca Andretto </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>12.12.2021 </dd></dl>
+
+<p class="definition">Definition in file <a class="el" href="strommessung_8c_source.html">strommessung.c</a>.</p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a0a1b3983be6c858213f717b52b6cc5f1" name="a0a1b3983be6c858213f717b52b6cc5f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a1b3983be6c858213f717b52b6cc5f1">&#9670;&nbsp;</a></span>measure_current_HAL()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void measure_current_HAL </td>
+          <td class="memname">double measure_current_HAL </td>
           <td>(</td>
-          <td class="paramtype">uint32_t *&#160;</td>
-          <td class="paramname"><em>current_left</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">uint32_t *&#160;</td>
-          <td class="paramname"><em>current_right</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strommessung_8c_source.html#l00017">17</a> of file <a class="el" href="strommessung_8c_source.html">strommessung.c</a>.</p>
+<p>measures the current and displays it </p>
+<p >Initiates multiple measurements based on REPETITIONS. Calculates the average amplitudes of left and right hall sensor. Calculates current in the mains cable. Displays the current.</p>
+<dl class="section return"><dt>Returns</dt><dd>the current measured </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="strommessung_8c_source.html#l00034">34</a> of file <a class="el" href="strommessung_8c_source.html">strommessung.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="strommessung_8c_a732d5cce4b9293bb93fe9bceced5f16c_cgraph.png" border="0" usemap="#astrommessung_8c_a732d5cce4b9293bb93fe9bceced5f16c_cgraph" alt=""/></div>
+<div class="center"><img src="strommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_cgraph.png" border="0" usemap="#astrommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_cgraph" alt=""/></div>
+<map name="astrommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_cgraph" id="astrommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_cgraph">
+<area shape="rect" title="measures the current and displays it" alt="" coords="5,81,156,108"/>
+<area shape="rect" href="measuring_8c.html#afe1768dbd46b7351841a8ac4f54d7201" title="Initialize ADC, timer and DMA for sequential acquisition = scan mode." alt="" coords="209,5,323,32"/>
+<area shape="rect" href="measuring_8c.html#aeb8392280f6f2fe674f02d12012e83a6" title="Start DMA, ADC and timer." alt="" coords="204,56,328,83"/>
+<area shape="rect" href="measuring_8c.html#ad62391cc1334f996f7987d8f301c45ed" title="Applies 5 point moving average tovalues in ADC_DMA buffer." alt="" coords="211,107,321,133"/>
+<area shape="rect" href="menu_8c.html#a2cbb4c209c599e91da57c0d6cf8f710e" title="Draw the menu onto the display." alt="" coords="219,157,313,184"/>
+<area shape="rect" href="measuring_8c.html#a0a03a8156d97779343c341d786c0e365" title=" " alt="" coords="382,81,501,108"/>
+<area shape="rect" href="measuring_8c.html#a52e98955c64c42add7a415a6514ec589" title=" " alt="" coords="376,132,507,159"/>
+</map>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="strommessung_8c_a732d5cce4b9293bb93fe9bceced5f16c_icgraph.png" border="0" usemap="#astrommessung_8c_a732d5cce4b9293bb93fe9bceced5f16c_icgraph" alt=""/></div>
+<div class="center"><img src="strommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_icgraph.png" border="0" usemap="#astrommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_icgraph" alt=""/></div>
+<map name="astrommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_icgraph" id="astrommessung_8c_a0a1b3983be6c858213f717b52b6cc5f1_icgraph">
+<area shape="rect" title="measures the current and displays it" alt="" coords="104,5,255,32"/>
+<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
+</map>
 </div>
 
 </div>

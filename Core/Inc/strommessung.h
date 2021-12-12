@@ -1,12 +1,12 @@
-/*
- * strommessung.h
+/** ***************************************************************************
+ * @file
+ * @brief See strommessung.c
  *
- *  Created on: 26.11.2021
- *      Author: Luca Andretto
- */
+ *****************************************************************************/
 
 #ifndef INC_STROMMESSUNG_H_
 #define INC_STROMMESSUNG_H_
+#define REPETITIONS 5
 
 /******************************************************************************
  * Includes

@@ -69,10 +69,14 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">distance.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>See <a class="el" href="distance_8c.html" title="calculates distance and angle and displays them">distance.c</a>.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="measuring_8h_source.html">measuring.h</a>&quot;</code><br />
 <code>#include &quot;stm32f429i_discovery_lcd.h&quot;</code><br />
 <code>#include &quot;arm_math.h&quot;</code><br />
@@ -80,22 +84,65 @@ $(function() {
 Include dependency graph for distance.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="distance_8h__incl.png" border="0" usemap="#a_inc_2distance_8h" alt=""/></div>
+<map name="a_inc_2distance_8h" id="a_inc_2distance_8h">
+<area shape="rect" title="See distance.c." alt="" coords="182,5,285,32"/>
+<area shape="rect" href="measuring_8h.html" title="See measuring.c." alt="" coords="43,87,136,114"/>
+<area shape="rect" title=" " alt="" coords="160,80,307,121"/>
+<area shape="rect" title=" " alt="" coords="331,87,421,114"/>
+<area shape="rect" title=" " alt="" coords="5,169,80,196"/>
+<area shape="rect" title=" " alt="" coords="105,169,170,196"/>
+</map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="distance_8h__dep__incl.png" border="0" usemap="#a_inc_2distance_8hdep" alt=""/></div>
+<map name="a_inc_2distance_8hdep" id="a_inc_2distance_8hdep">
+<area shape="rect" title="See distance.c." alt="" coords="127,5,230,32"/>
+<area shape="rect" href="distance_8c.html" title="calculates distance and angle and displays them" alt="" coords="5,80,112,107"/>
+<area shape="rect" href="main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="136,80,221,107"/>
+<area shape="rect" href="strommessung_8c.html" title="calculates distance and angle and displays them" alt="" coords="246,80,389,107"/>
+</map>
 </div>
 </div>
 <p><a href="distance_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ab33cd713eecd08c51143743c2b6c1283"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="distance_8h.html#ab33cd713eecd08c51143743c2b6c1283">REPETITIONS</a>&#160;&#160;&#160;10</td></tr>
+<tr class="separator:ab33cd713eecd08c51143743c2b6c1283"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac7889be3035035f71a3d72b999c94ae8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="distance_8h.html#ac7889be3035035f71a3d72b999c94ae8">draw_arrow</a> (uint16_t direction, uint16_t x_pos, uint16_t y_pos)</td></tr>
+<tr class="memdesc:ac7889be3035035f71a3d72b999c94ae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">draws arrow based on angle and position on display  <a href="distance_8h.html#ac7889be3035035f71a3d72b999c94ae8">More...</a><br /></td></tr>
 <tr class="separator:ac7889be3035035f71a3d72b999c94ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0476c1fe6e5721d29eab9c4e6934e495"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="distance_8h.html#a0476c1fe6e5721d29eab9c4e6934e495">measure_distance</a> ()</td></tr>
+<tr class="memdesc:a0476c1fe6e5721d29eab9c4e6934e495"><td class="mdescLeft">&#160;</td><td class="mdescRight">measures the distance and displays it  <a href="distance_8h.html#a0476c1fe6e5721d29eab9c4e6934e495">More...</a><br /></td></tr>
 <tr class="separator:a0476c1fe6e5721d29eab9c4e6934e495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >See <a class="el" href="distance_8c.html" title="calculates distance and angle and displays them">distance.c</a>. </p>
+<hr  />
+ 
+<p class="definition">Definition in file <a class="el" href="distance_8h_source.html">distance.h</a>.</p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ab33cd713eecd08c51143743c2b6c1283" name="ab33cd713eecd08c51143743c2b6c1283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab33cd713eecd08c51143743c2b6c1283">&#9670;&nbsp;</a></span>REPETITIONS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define REPETITIONS&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="distance_8h_source.html#l00017">17</a> of file <a class="el" href="distance_8h_source.html">distance.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ac7889be3035035f71a3d72b999c94ae8" name="ac7889be3035035f71a3d72b999c94ae8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac7889be3035035f71a3d72b999c94ae8">&#9670;&nbsp;</a></span>draw_arrow()</h2>
@@ -129,11 +176,26 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="distance_8c_source.html#l00050">50</a> of file <a class="el" href="distance_8c_source.html">distance.c</a>.</p>
+<p>draws arrow based on angle and position on display </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">direction</td><td>of the arrow </td></tr>
+    <tr><td class="paramname">x_pos</td><td>of the center of the arrow in pixels </td></tr>
+    <tr><td class="paramname">y_pos</td><td>of the center of the arrow in pixels </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="distance_8c_source.html#l00092">92</a> of file <a class="el" href="distance_8c_source.html">distance.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="distance_8h_ac7889be3035035f71a3d72b999c94ae8_icgraph.png" border="0" usemap="#adistance_8h_ac7889be3035035f71a3d72b999c94ae8_icgraph" alt=""/></div>
+<map name="adistance_8h_ac7889be3035035f71a3d72b999c94ae8_icgraph" id="adistance_8h_ac7889be3035035f71a3d72b999c94ae8_icgraph">
+<area shape="rect" title="draws arrow based on angle and position on display" alt="" coords="280,5,367,32"/>
+<area shape="rect" href="distance_8c.html#a0476c1fe6e5721d29eab9c4e6934e495" title="measures the distance and displays it" alt="" coords="104,5,232,32"/>
+<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
+</map>
 </div>
 
 </div>
@@ -153,16 +215,35 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="distance_8c_source.html#l00068">68</a> of file <a class="el" href="distance_8c_source.html">distance.c</a>.</p>
+<p>measures the distance and displays it </p>
+<p >Initiates multiple measurements based on REPETITIONS. Calculates the average amplitudes of left and right sensing pad. Calculates distance and angle of the mains cable. Displays distance and angle. </p>
+
+<p class="definition">Definition at line <a class="el" href="distance_8c_source.html#l00116">116</a> of file <a class="el" href="distance_8c_source.html">distance.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="distance_8h_a0476c1fe6e5721d29eab9c4e6934e495_cgraph.png" border="0" usemap="#adistance_8h_a0476c1fe6e5721d29eab9c4e6934e495_cgraph" alt=""/></div>
+<map name="adistance_8h_a0476c1fe6e5721d29eab9c4e6934e495_cgraph" id="adistance_8h_a0476c1fe6e5721d29eab9c4e6934e495_cgraph">
+<area shape="rect" title="measures the distance and displays it" alt="" coords="5,157,133,184"/>
+<area shape="rect" href="measuring_8c.html#afe1768dbd46b7351841a8ac4f54d7201" title="Initialize ADC, timer and DMA for sequential acquisition = scan mode." alt="" coords="186,5,301,32"/>
+<area shape="rect" href="measuring_8c.html#aeb8392280f6f2fe674f02d12012e83a6" title="Start DMA, ADC and timer." alt="" coords="181,56,305,83"/>
+<area shape="rect" href="distance_8c.html#a6a2ca20d8838c78baaa23fe87ab3ff2e" title="calculates angle based on calibration table." alt="" coords="201,107,285,133"/>
+<area shape="rect" href="distance_8c.html#af4d5fbc1888ee69ddb943dc7907ad50d" title="calculates distance based on calibration table." alt="" coords="192,157,295,184"/>
+<area shape="rect" href="distance_8c.html#ac7889be3035035f71a3d72b999c94ae8" title="draws arrow based on angle and position on display" alt="" coords="200,208,287,235"/>
+<area shape="rect" href="measuring_8c.html#ad62391cc1334f996f7987d8f301c45ed" title="Applies 5 point moving average tovalues in ADC_DMA buffer." alt="" coords="188,259,299,285"/>
+<area shape="rect" href="menu_8c.html#a2cbb4c209c599e91da57c0d6cf8f710e" title="Draw the menu onto the display." alt="" coords="196,309,291,336"/>
+<area shape="rect" href="measuring_8c.html#a0a03a8156d97779343c341d786c0e365" title=" " alt="" coords="359,233,478,260"/>
+<area shape="rect" href="measuring_8c.html#a52e98955c64c42add7a415a6514ec589" title=" " alt="" coords="353,284,484,311"/>
+</map>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="distance_8h_a0476c1fe6e5721d29eab9c4e6934e495_icgraph.png" border="0" usemap="#adistance_8h_a0476c1fe6e5721d29eab9c4e6934e495_icgraph" alt=""/></div>
+<map name="adistance_8h_a0476c1fe6e5721d29eab9c4e6934e495_icgraph" id="adistance_8h_a0476c1fe6e5721d29eab9c4e6934e495_icgraph">
+<area shape="rect" title="measures the distance and displays it" alt="" coords="104,5,232,32"/>
+<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
+</map>
 </div>
 
 </div>

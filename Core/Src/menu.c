@@ -45,18 +45,11 @@
  *****************************************************************************/
 static MENU_item_t MENU_transition = MENU_NONE;	///< Transition to this menu
 static MENU_entry_t MENU_entry[MENU_ENTRY_COUNT] = {
-		{"Switch",	"off",		LCD_COLOR_BLACK,	LCD_COLOR_RED},
-		{"Current",  "[I] = A",	LCD_COLOR_BLACK,	LCD_COLOR_BLUE},
-		{"Distance", "[d] = m",	LCD_COLOR_BLACK,	LCD_COLOR_GREEN}
+		{"Single",	"distance",	LCD_COLOR_BLACK,	LCD_COLOR_RED},
+		{"Accurate", "distance",LCD_COLOR_BLACK,	LCD_COLOR_GREEN},
+		{"Current",  "[I] = A",	LCD_COLOR_BLACK,	LCD_COLOR_BLUE}
 };										///< All the menu entries
 
-static MENU_entry_t SUB_MENU_entry[SUB_MENU_ENTRY_COUNT] = {
-		//{"sin-",	"gle",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTBLUE},
-		//{"Timer",	"+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTGREEN},
-		//{"DMA",	    "+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTRED},
-		{"Switch",	"off",		LCD_COLOR_BLACK,	LCD_COLOR_RED},
-		{"go", "back",			LCD_COLOR_BLACK,	LCD_COLOR_GREEN}
-};
 /******************************************************************************
  * Functions
  *****************************************************************************/
@@ -101,9 +94,17 @@ void MENU_hint(void)
 	BSP_LCD_SetFont(&Font24);
 	BSP_LCD_DisplayStringAt(5,10, (uint8_t *)"Cable-Monitor", LEFT_MODE);
 	BSP_LCD_SetFont(&Font16);
-	BSP_LCD_DisplayStringAt(5, 60, (uint8_t *)"Touch a menu item", LEFT_MODE);
-	BSP_LCD_DisplayStringAt(5, 80, (uint8_t *)"to start an ADC demo", LEFT_MODE);
-	BSP_LCD_DisplayStringAt(5, 100, (uint8_t *)"Version 10.12.2021", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 40, (uint8_t *)"Touch a menu item", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 60, (uint8_t *)"to start the ", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 80, (uint8_t *)"corresponding", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 100, (uint8_t *)"measurement.", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 120, (uint8_t *)"If at any point a", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 140, (uint8_t *)"different function", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 160, (uint8_t *)"is desired, press", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 180, (uint8_t *)"the corresponding", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 200, (uint8_t *)"item until the", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 220, (uint8_t *)"desired measurement", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 240, (uint8_t *)"is beeing performed.", LEFT_MODE);
 }
 
 
@@ -183,7 +184,6 @@ void MENU_check_transition(void)
 					item_new = (BSP_LCD_GetXSize() - TS_State.X)	// Calculate new item
 							/ (BSP_LCD_GetXSize()/MENU_ENTRY_COUNT);
 				//	BSP_LCD_Clear(LCD_COLOR_WHITE);
-				//	if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
 					if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
 						item_new = MENU_NONE;	// Out of bounds
 					}

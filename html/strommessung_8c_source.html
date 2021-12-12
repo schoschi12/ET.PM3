@@ -71,126 +71,157 @@ $(function() {
   <div class="headertitle"><div class="title">strommessung.c</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="strommessung_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * strommessung.c</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> *  Created on: 26.11.2021</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> *      Author: Luca Andretto</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">/******************************************************************************</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * Includes</span></div>
+<a href="strommessung_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/** ***************************************************************************</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * @file</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * @brief calculates distance and angle and displays them</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * Contains the calibration table for distance and angle measurement.</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Initiates measurement, calculates average and displays the values to the display.</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * @author  Luca Andretto</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * @date    12.12.2021</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *****************************************************************************/</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="strommessung_8h.html">strommessung.h</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="measuring_8h.html">measuring.h</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="distance_8h.html">distance.h</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;math.h&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="strommessung_8h.html#a732d5cce4b9293bb93fe9bceced5f16c">   17</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="strommessung_8c.html#a732d5cce4b9293bb93fe9bceced5f16c">measure_current_HAL</a>(uint32_t *current_left, uint32_t *current_right) {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordflow">while</span> (1) {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        uint32_t avg_left = 0;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        uint32_t avg_right = 0;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">/******************************************************************************</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * Includes</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> *****************************************************************************/</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;stm32f429i_discovery_lcd.h&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="strommessung_8h.html">strommessung.h</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="measuring_8h.html">measuring.h</a>&quot;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="distance_8h.html">distance.h</a>&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="menu_8h.html">menu.h</a>&quot;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordtype">double</span> U_halsensor = 0;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordtype">double</span> B_field = 0;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordtype">double</span> current = 0;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordtype">double</span> pi = 3.14159265459;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <a class="code hl_function" href="measuring_8h.html#afe1768dbd46b7351841a8ac4f54d7201">ADC3_scan_init</a>(11, 6);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <a class="code hl_function" href="measuring_8h.html#aeb8392280f6f2fe674f02d12012e83a6">ADC3_scan_start</a>();</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 20; i++) {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            <span class="comment">//while (MEAS_data_ready == false);</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="comment">//  MEAS_data_ready = false;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            uint32_t *<a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a> = <a class="code hl_function" href="measuring_8h.html#a52e98955c64c42add7a415a6514ec589">get_ADC_samples</a>();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            uint32_t left_max = 0;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            uint32_t right_max = 0;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            uint32_t left_min = 5000;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            uint32_t right_min = 5000;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_function" href="measuring_8h.html#a0a03a8156d97779343c341d786c0e365">get_ADC_NUMS</a>(); i++) {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                <span class="keywordflow">if</span> (<a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i] &gt; left_max) {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                    left_max = <a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i];</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                }</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                <span class="keywordflow">if</span> (<a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i + 1] &gt; right_max) {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                    right_max = <a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i + 1];</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                <span class="keywordflow">if</span> (<a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i] &lt; left_min) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                    left_min = <a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i];</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                }</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                <span class="keywordflow">if</span> (<a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i + 1] &lt; right_min) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                    right_min = <a class="code hl_variable" href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a>[2 * i + 1];</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                }</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            }</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            avg_left += (left_max - left_min);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            avg_right += (right_max - right_min);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        avg_left = avg_left / 20;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        avg_right = avg_right / 20;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">if</span> (avg_left &gt; avg_right) {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            current = (double) (0.0023 * avg_left - 0.4228);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            current = (double) (0.0023 * avg_right - 0.4228);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        }</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">        /********************************************************/</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="comment">//</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="comment">//  U_halsensor = avg_left*(3.3/2^12)</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="comment">//  u_luft = 1+4e-7</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="comment">//  u_0 = 1,2566e-6 [u_0]= N/A^2</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="comment">//  Hallsensor -90mV/mT</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="comment">//  Distanc: r = 0.01 [r]=m</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="comment">//  B = (U_halsensor/(90mV/mT)/1000</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="comment">//  B = u_0*u_luft*I/(2*pi*r)</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="comment">//  I = B*2*pi*r/(u_0*u_luft)</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="comment">//display result$</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">const</span> <span class="keywordtype">double</span> u_luft = 1 + 4e-7;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">const</span> <span class="keywordtype">double</span> u_0 = 1.2566e-6;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">const</span> uint16_t amplification = 501;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">const</span> uint16_t resolution = 4096;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">//  U_halsensor = (double) (2300*(3.0/(resolution))); //1.68V</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment">//  U_halsensor = U_halsensor/amplification;</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment">//  B_field = (U_halsensor/0.09)/1000;</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">//  current = (B_field*2*pi*0.01)/(u_0)+0.7;</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keyword">const</span> uint32_t Y_OFFSET = 260;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keyword">const</span> uint32_t X_SIZE = 240;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        uint32_t data;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        uint32_t data_last;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="comment">/* Clear the display */</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="comment">/* Write first 2 samples as numbers */</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        BSP_LCD_SetFont(&amp;Font24);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        BSP_LCD_SetBackColor(LCD_COLOR_WHITE);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keywordtype">char</span> text[16];</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        snprintf(text, 15, <span class="stringliteral">&quot;left : %4d&quot;</span>, (<span class="keywordtype">int</span>) (avg_left));</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        BSP_LCD_DisplayStringAt(0, 60, (uint8_t*) text, LEFT_MODE);</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        snprintf(text, 15, <span class="stringliteral">&quot;right: %4d&quot;</span>, (<span class="keywordtype">int</span>) (avg_right));</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        BSP_LCD_DisplayStringAt(0, 80, (uint8_t*) text, LEFT_MODE);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        snprintf(text, 15, <span class="stringliteral">&quot;current: %.2lfA&quot;</span>, (current));</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        BSP_LCD_DisplayStringAt(0, 100, (uint8_t*) text, LEFT_MODE);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">/******************************************************************************</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> * Functions</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> *****************************************************************************/</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"></span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment"> * @brief measures the current and displays it</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> * Initiates multiple measurements based on REPETITIONS. Calculates the average amplitudes of left and right hall sensor.</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment"> * Calculates current in the mains cable. Displays the current.</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"> * @return the current measured</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="strommessung_8h.html#a0a1b3983be6c858213f717b52b6cc5f1">   34</a></span><span class="keywordtype">double</span> <a class="code hl_function" href="strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1">measure_current_HAL</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">double</span> current = 0;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">//while(1){</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    uint32_t avg_left = 0;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    uint32_t avg_right = 0;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">//</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">//  ADC3_scan_init(11, 6);</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">//  ADC3_scan_start();</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_define" href="distance_8h.html#ab33cd713eecd08c51143743c2b6c1283">REPETITIONS</a>; i++) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <a class="code hl_function" href="measuring_8h.html#afe1768dbd46b7351841a8ac4f54d7201">ADC3_scan_init</a>(11, 6);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <a class="code hl_function" href="measuring_8h.html#aeb8392280f6f2fe674f02d12012e83a6">ADC3_scan_start</a>();</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordflow">while</span> (<a class="code hl_variable" href="measuring_8h.html#a8307c93a35eebeec45eac55648b0f606">MEAS_data_ready</a> == <span class="keyword">false</span>)</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            ;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <a class="code hl_variable" href="measuring_8h.html#a8307c93a35eebeec45eac55648b0f606">MEAS_data_ready</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <a class="code hl_function" href="measuring_8h.html#ad62391cc1334f996f7987d8f301c45ed">MEAS_average</a>(&amp;avg_left, &amp;avg_right);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">//      uint32_t *ADC_samples = get_ADC_samples();</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">//      uint32_t left_max = 0;</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">//      uint32_t right_max = 0;</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">//      uint32_t left_min = 5000;</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">//      uint32_t right_min = 5000;</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">//      double left_value, right_value;</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">//</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">//      for (int i = 0; i &lt; get_ADC_NUMS(); i++) {</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">//          if (ADC_samples[2 * i] &gt; left_max) {</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">//              left_max = ADC_samples[2 * i];</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">//          }</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">//          if (ADC_samples[2 * i + 1] &gt; right_max) {</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">//              right_max = ADC_samples[2 * i + 1];</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">//          }</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">//          if (ADC_samples[2 * i] &lt; left_min) {</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">//              left_min = ADC_samples[2 * i];</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">//          }</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">//          if (ADC_samples[2 * i + 1] &lt; right_min) {</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">//              right_min = ADC_samples[2 * i + 1];</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">//          }</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">//</span><span class="comment"></span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">////                int mov_avg = 4;</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">////                        for (int i = 2; i &lt; (get_ADC_NUMS() - 2); i++) {</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">////                //          right_value = 0;</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment">////                //          left_value = 0;</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">////                //          for (int j = 0; j &lt;= mov_avg; j++){</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment">////                //              right_value += ADC_samples[2*(j - mov_avg) + 1];</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">////                //              left_value += ADC_samples[2*(j - mov_avg)];</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">////                //          }</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment">////                //</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment">////                //          right_value /= (mov_avg * 2 + 1);</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">////                //          left_value /= (mov_avg * 2 + 1);</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">////                            left_value = (ADC_samples[2*(i-2)+1] + ADC_samples[2*(i-1)+1] + ADC_samples[2*i+1] + ADC_samples[2*(i+1)+1] + ADC_samples[2*(i+2)+1]) / 5;</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment">////                            right_value = (ADC_samples[2*(i-2)] + ADC_samples[2*(i-1)] + ADC_samples[2*i] + ADC_samples[2*(i+1)] + ADC_samples[2*(i+2)]) / 5;</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">////</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment">////                            if ((uint32_t)left_value &gt; left_max) {</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">////                                left_max = (uint32_t)left_value;</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment">////                            }</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment">////                            if ((uint32_t)right_value &gt; right_max) {</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">////                                right_max = (uint32_t)right_value;</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment">////                            }</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">////                            if ((uint32_t)left_value &lt; left_min) {</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">////                                left_min = (uint32_t)left_value;</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">////                            }</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">////                            if ((uint32_t)right_value &lt; right_min) {</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment">////                                right_min = (uint32_t)right_value;</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">////                            }</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">////</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment"></span><span class="comment">//      }</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment">//      avg_left += (left_max - left_min);</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment">//      avg_right += (right_max - right_min);</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    }</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        HAL_Delay(200);                 <span class="comment">// Wait or sleep</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="comment">//*current_left = sum_channel_left;</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="comment">//*current_right = sum_channel_right;</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}</div>
-<div class="ttc" id="adistance_8h_html"><div class="ttname"><a href="distance_8h.html">distance.h</a></div></div>
-<div class="ttc" id="ameasuring_8c_html_ab7f88c24d5816d6d48d932fdb53caaf2"><div class="ttname"><a href="measuring_8c.html#ab7f88c24d5816d6d48d932fdb53caaf2">ADC_samples</a></div><div class="ttdeci">static uint32_t ADC_samples[2 *ADC_NUMS]</div><div class="ttdoc">ADC values of max. 2 input channels.</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00087">measuring.c:87</a></div></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    avg_left = avg_left / <a class="code hl_define" href="distance_8h.html#ab33cd713eecd08c51143743c2b6c1283">REPETITIONS</a>;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    avg_right = avg_right / <a class="code hl_define" href="distance_8h.html#ab33cd713eecd08c51143743c2b6c1283">REPETITIONS</a>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">if</span> (avg_left &gt; avg_right) {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        current = (double) (0.0023 * avg_left - 0.4228);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        current = (double) (0.0023 * avg_right - 0.4228);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    }</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">const</span> uint32_t Y_OFFSET = 200;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">const</span> uint32_t X_SIZE = 240;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    uint32_t data;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    uint32_t data_last;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="comment">/* Clear the display */</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1 + 60);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="comment">/* Write first 2 samples as numbers */</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_function" href="menu_8h.html#a2cbb4c209c599e91da57c0d6cf8f710e">MENU_draw</a>();</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    BSP_LCD_SetFont(&amp;Font24);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    BSP_LCD_SetBackColor(LCD_COLOR_WHITE);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordtype">char</span> text[16];</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    snprintf(text, 15, <span class="stringliteral">&quot;left : %4d&quot;</span>, (<span class="keywordtype">int</span>) (avg_left));</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    BSP_LCD_DisplayStringAt(0, 60, (uint8_t*) text, LEFT_MODE);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    snprintf(text, 15, <span class="stringliteral">&quot;right: %4d&quot;</span>, (<span class="keywordtype">int</span>) (avg_right));</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    BSP_LCD_DisplayStringAt(0, 80, (uint8_t*) text, LEFT_MODE);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    snprintf(text, 15, <span class="stringliteral">&quot;current: %.2lfA&quot;</span>, (current));</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    BSP_LCD_DisplayStringAt(0, 100, (uint8_t*) text, LEFT_MODE);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    HAL_Delay(200);                 <span class="comment">// Wait or sleep</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordflow">return</span> current;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>}</div>
+<div class="ttc" id="adistance_8h_html"><div class="ttname"><a href="distance_8h.html">distance.h</a></div><div class="ttdoc">See distance.c.</div></div>
+<div class="ttc" id="adistance_8h_html_ab33cd713eecd08c51143743c2b6c1283"><div class="ttname"><a href="distance_8h.html#ab33cd713eecd08c51143743c2b6c1283">REPETITIONS</a></div><div class="ttdeci">#define REPETITIONS</div><div class="ttdef"><b>Definition:</b> <a href="distance_8h_source.html#l00017">distance.h:17</a></div></div>
 <div class="ttc" id="ameasuring_8h_html"><div class="ttname"><a href="measuring_8h.html">measuring.h</a></div><div class="ttdoc">See measuring.c.</div></div>
-<div class="ttc" id="ameasuring_8h_html_a0a03a8156d97779343c341d786c0e365"><div class="ttname"><a href="measuring_8h.html#a0a03a8156d97779343c341d786c0e365">get_ADC_NUMS</a></div><div class="ttdeci">int get_ADC_NUMS(void)</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00094">measuring.c:94</a></div></div>
-<div class="ttc" id="ameasuring_8h_html_a52e98955c64c42add7a415a6514ec589"><div class="ttname"><a href="measuring_8h.html#a52e98955c64c42add7a415a6514ec589">get_ADC_samples</a></div><div class="ttdeci">uint32_t * get_ADC_samples(void)</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00099">measuring.c:99</a></div></div>
-<div class="ttc" id="ameasuring_8h_html_aeb8392280f6f2fe674f02d12012e83a6"><div class="ttname"><a href="measuring_8h.html#aeb8392280f6f2fe674f02d12012e83a6">ADC3_scan_start</a></div><div class="ttdeci">void ADC3_scan_start(void)</div><div class="ttdoc">Start DMA, ADC and timer.</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00510">measuring.c:510</a></div></div>
-<div class="ttc" id="ameasuring_8h_html_afe1768dbd46b7351841a8ac4f54d7201"><div class="ttname"><a href="measuring_8h.html#afe1768dbd46b7351841a8ac4f54d7201">ADC3_scan_init</a></div><div class="ttdeci">void ADC3_scan_init(unsigned long channel1, unsigned long channel2)</div><div class="ttdoc">Initialize ADC, timer and DMA for sequential acquisition = scan mode.</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00478">measuring.c:478</a></div></div>
-<div class="ttc" id="astrommessung_8c_html_a732d5cce4b9293bb93fe9bceced5f16c"><div class="ttname"><a href="strommessung_8c.html#a732d5cce4b9293bb93fe9bceced5f16c">measure_current_HAL</a></div><div class="ttdeci">void measure_current_HAL(uint32_t *current_left, uint32_t *current_right)</div><div class="ttdef"><b>Definition:</b> <a href="strommessung_8c_source.html#l00017">strommessung.c:17</a></div></div>
-<div class="ttc" id="astrommessung_8h_html"><div class="ttname"><a href="strommessung_8h.html">strommessung.h</a></div></div>
+<div class="ttc" id="ameasuring_8h_html_a8307c93a35eebeec45eac55648b0f606"><div class="ttname"><a href="measuring_8h.html#a8307c93a35eebeec45eac55648b0f606">MEAS_data_ready</a></div><div class="ttdeci">bool MEAS_data_ready</div><div class="ttdoc">New data is ready.</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00080">measuring.c:80</a></div></div>
+<div class="ttc" id="ameasuring_8h_html_ad62391cc1334f996f7987d8f301c45ed"><div class="ttname"><a href="measuring_8h.html#ad62391cc1334f996f7987d8f301c45ed">MEAS_average</a></div><div class="ttdeci">void MEAS_average(uint32_t *avg_left, uint32_t *avg_right)</div><div class="ttdoc">Applies 5 point moving average tovalues in ADC_DMA buffer.</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00677">measuring.c:677</a></div></div>
+<div class="ttc" id="ameasuring_8h_html_aeb8392280f6f2fe674f02d12012e83a6"><div class="ttname"><a href="measuring_8h.html#aeb8392280f6f2fe674f02d12012e83a6">ADC3_scan_start</a></div><div class="ttdeci">void ADC3_scan_start(void)</div><div class="ttdoc">Start DMA, ADC and timer.</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00487">measuring.c:487</a></div></div>
+<div class="ttc" id="ameasuring_8h_html_afe1768dbd46b7351841a8ac4f54d7201"><div class="ttname"><a href="measuring_8h.html#afe1768dbd46b7351841a8ac4f54d7201">ADC3_scan_init</a></div><div class="ttdeci">void ADC3_scan_init(unsigned long channel1, unsigned long channel2)</div><div class="ttdoc">Initialize ADC, timer and DMA for sequential acquisition = scan mode.</div><div class="ttdef"><b>Definition:</b> <a href="measuring_8c_source.html#l00455">measuring.c:455</a></div></div>
+<div class="ttc" id="amenu_8h_html"><div class="ttname"><a href="menu_8h.html">menu.h</a></div><div class="ttdoc">See menu.c.</div></div>
+<div class="ttc" id="amenu_8h_html_a2cbb4c209c599e91da57c0d6cf8f710e"><div class="ttname"><a href="menu_8h.html#a2cbb4c209c599e91da57c0d6cf8f710e">MENU_draw</a></div><div class="ttdeci">void MENU_draw(void)</div><div class="ttdoc">Draw the menu onto the display.</div><div class="ttdef"><b>Definition:</b> <a href="menu_8c_source.html#l00065">menu.c:65</a></div></div>
+<div class="ttc" id="astrommessung_8c_html_a0a1b3983be6c858213f717b52b6cc5f1"><div class="ttname"><a href="strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1">measure_current_HAL</a></div><div class="ttdeci">double measure_current_HAL(void)</div><div class="ttdoc">measures the current and displays it</div><div class="ttdef"><b>Definition:</b> <a href="strommessung_8c_source.html#l00034">strommessung.c:34</a></div></div>
+<div class="ttc" id="astrommessung_8h_html"><div class="ttname"><a href="strommessung_8h.html">strommessung.h</a></div><div class="ttdoc">See strommessung.c.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

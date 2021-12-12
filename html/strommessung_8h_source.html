@@ -71,15 +71,15 @@ $(function() {
   <div class="headertitle"><div class="title">strommessung.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="strommessung_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * strommessung.h</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> *  Created on: 26.11.2021</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> *      Author: Luca Andretto</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#ifndef INC_STROMMESSUNG_H_</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#define INC_STROMMESSUNG_H_</span></div>
+<a href="strommessung_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/** ***************************************************************************</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * @file</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * @brief See strommessung.c</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> *****************************************************************************/</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#ifndef INC_STROMMESSUNG_H_</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#define INC_STROMMESSUNG_H_</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="strommessung_8h.html#ab33cd713eecd08c51143743c2b6c1283">    9</a></span><span class="preprocessor">#define REPETITIONS 5</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">/******************************************************************************</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * Includes</span></div>
@@ -87,11 +87,11 @@ $(function() {
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="measuring_8h.html">measuring.h</a>&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keywordtype">void</span> <a class="code hl_function" href="strommessung_8h.html#a732d5cce4b9293bb93fe9bceced5f16c">measure_current_HAL</a>(uint32_t *current_left, uint32_t *current_right);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keywordtype">double</span> <a class="code hl_function" href="strommessung_8h.html#a0a1b3983be6c858213f717b52b6cc5f1">measure_current_HAL</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#endif </span><span class="comment">/* INC_STROMMESSUNG_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="ameasuring_8h_html"><div class="ttname"><a href="measuring_8h.html">measuring.h</a></div><div class="ttdoc">See measuring.c.</div></div>
-<div class="ttc" id="astrommessung_8h_html_a732d5cce4b9293bb93fe9bceced5f16c"><div class="ttname"><a href="strommessung_8h.html#a732d5cce4b9293bb93fe9bceced5f16c">measure_current_HAL</a></div><div class="ttdeci">void measure_current_HAL(uint32_t *current_left, uint32_t *current_right)</div><div class="ttdef"><b>Definition:</b> <a href="strommessung_8c_source.html#l00017">strommessung.c:17</a></div></div>
+<div class="ttc" id="astrommessung_8h_html_a0a1b3983be6c858213f717b52b6cc5f1"><div class="ttname"><a href="strommessung_8h.html#a0a1b3983be6c858213f717b52b6cc5f1">measure_current_HAL</a></div><div class="ttdeci">double measure_current_HAL(void)</div><div class="ttdoc">measures the current and displays it</div><div class="ttdef"><b>Definition:</b> <a href="strommessung_8c_source.html#l00034">strommessung.c:34</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

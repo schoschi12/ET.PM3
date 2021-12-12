@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>demo_code: Demo-Code</title>
+<title>demo_code: Cable-Monitor Code Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,36 +64,30 @@ $(function() {
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Demo-Code </div></div>
+  <div class="headertitle"><div class="title">Cable-Monitor Code Documentation </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >This demo_code is a template for the <b>Electronics-Project Modules</b> <b>ET.PM3: Cable-Monitor</b> and <b>ET.PM4: Radar-Sensor</b> <br  />
- in the <b>second year of the electronics engineering curriculum</b> at the School of Engineering of the Zurich University of Applied Sciences.</p>
-<p >Before starting to write own code, read this documentation carefully. <br  />
- The file <a class="el" href="measuring_8c.html" title="Measuring voltages with the ADC(s) in different configurations.">measuring.c</a> shows how to configure ADC, Timer and DMA. <br  />
- Consult the file <a class="el" href="menu_8c.html" title="The menu.">menu.c</a> for examples on how to use display and touchscreen. <br  />
+<div class="textblock"><p >This documents the code for the <b>Electronics-Project Modules</b> <b>ET.PM3: Cable-Monitor</b> <br  />
+ in the <b>third year of the part-time electronics engineering curriculum</b> at the School of Engineering of the Zurich University of Applied Sciences.</p>
+<p ><br  />
+ <a class="el" href="measuring_8c.html" title="Measuring voltages with the ADC(s) in different configurations.">measuring.c</a> initiates the ADCs and performs measurements as well as implementing some filter functions. <br  />
+ <a class="el" href="menu_8c.html" title="The menu.">menu.c</a> initiates the available menus <br  />
  <a class="el" href="pushbutton_8c.html" title="USER pushbutton.">pushbutton.c</a> handles external interrupts. <br  />
+ <a class="el" href="distance_8c.html" title="calculates distance and angle and displays them">distance.c</a> handles the measurements of the E-field and displays the results. <br  />
+ <a class="el" href="strommessung_8c.html" title="calculates distance and angle and displays them">strommessung.c</a> handles the measurements of the B-field and displays the results. <br  />
  <a class="el" href="main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals.">main.c</a> puts everything together.</p>
 <div class="image">
 <img src="demo_screenshot.jpg" alt=""/>
 </div>
-<p >The template code is written for the evaluation board <b>32F429IDISCOVERY (Discovery kit with STM32F429ZI MCU)</b>.</p>
+<p >The code is written for the evaluation board <b>32F429IDISCOVERY (Discovery kit with STM32F429ZI MCU)</b>.</p>
 <h1>What has to be done in terms of Firmware Documentation </h1>
-<h2>Overall Information on the Project </h2>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Adapt the file <a class="el" href="mainpage_8dox.html">mainpage.dox</a> in the folder html/doc to reflect your own project <br  />
- You may add files in the same folder if appropriate. They will be added automatically by Doxygen to the <a href="pages.html">Related Pages</a> tab. <br  />
- Use one of the files present in the html/doc folder as template. You can find the often used @commands for Doxygen in those files.</dd></dl>
-<h2>Documenting the Code </h2>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Document all the .h and .c files See <a class="el" href="documenting.html">documenting.html</a> on how to do that. <br  />
- Before editing or writing code, take the <a class="el" href="coding_guidelines.html">coding_guidelines.html</a> to heart.</dd></dl>
 <h2>Documenting the Tests </h2>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Define a test plan and document the tests. <br  />
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Define a test plan and document the tests. <br  />
  This includes at least: test scenarios, conditions, expected results, pass/fail criteria, achieved results, verdict and remarks where appropriate. <br  />
  Use <a class="el" href="testing.html">testing.html</a> as a starting point.</dd></dl>
 <hr  />
- <dl class="section author"><dt>Author</dt><dd>Hanspeter Hochreutener (<a href="#" onclick="location.href='mai'+'lto:'+'hhr'+'t@'+'zha'+'w.'+'ch'; return false;">hhrt@<span style="display: none;">.nosp@m.</span>zhaw<span style="display: none;">.nosp@m.</span>.ch</a>) </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>03.08.2021 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Evalboard revision E (blue PCB) has an inverted y-axis in the touch controller compared to the display. Uncomment or comment the <b>#define EVAL_REV_E</b> in <a class="el" href="main_8h.html" title="See main.c.">main.h</a> accordingly.</dd></dl>
+ <dl class="section author"><dt>Author</dt><dd>Luca Andretto (<a href="#" onclick="location.href='mai'+'lto:'+'and'+'re'+'lu1'+'@s'+'tud'+'en'+'ts.'+'zh'+'aw.'+'ch'; return false;">andre<span style="display: none;">.nosp@m.</span>lu1@<span style="display: none;">.nosp@m.</span>stude<span style="display: none;">.nosp@m.</span>nts.<span style="display: none;">.nosp@m.</span>zhaw.<span style="display: none;">.nosp@m.</span>ch</a>), Janosch Dusoczky (<a href="#" onclick="location.href='mai'+'lto:'+'dus'+'oc'+'jan'+'@s'+'tud'+'en'+'ts.'+'zh'+'aw.'+'ch'; return false;">dusoc<span style="display: none;">.nosp@m.</span>jan@<span style="display: none;">.nosp@m.</span>stude<span style="display: none;">.nosp@m.</span>nts.<span style="display: none;">.nosp@m.</span>zhaw.<span style="display: none;">.nosp@m.</span>ch</a>) </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>12.12.2021</dd></dl>
 <dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

@@ -1,5 +1,22 @@
+/** ***************************************************************************
+ * @file
+ * @brief calculates distance and angle and displays them
+ *
+ * Contains the calibration table for distance and angle measurement.
+ * Initiates measurement, calculates average and displays the values to the display.
+ *
+ * @author  Janosch Dusoczky
+ * @date	12.12.2021
+ *****************************************************************************/
+
+/******************************************************************************
+ * Includes
+ *****************************************************************************/
 #include "distance.h"
 
+/******************************************************************************
+ * Variables
+ *****************************************************************************/
 uint16_t points[] = { 25, 0, 25, 100, 0, 25, 50, 25 };
 uint16_t n_points[8];
 float sine;
@@ -17,6 +34,18 @@ int angleLUT[] = { -90, -45, 0, 45, 90 };
 static float distance;
 static float angle;
 
+/******************************************************************************
+ * Functions
+ *****************************************************************************/
+
+/**
+ * @brief calculates distance based on calibration table.
+ *
+ * Averages the amplitude of both sensing pads and searches for corresponding distance. Saves distance in global variable.
+ *
+ * @param amplitude of left sensing pad
+ * @param amplitude of right sensing pad
+ */
 void calc_distance(uint16_t left, uint16_t right) {
 	int index = 0;
 	float average = ((float) left + (float) right) / 2 * correction;
@@ -29,10 +58,16 @@ void calc_distance(uint16_t left, uint16_t right) {
 	} else {
 		distance = distanceLUT[index + 1];
 	}
-	//float weight = (average - distanceLUT[0][index]) / (distanceLUT[0][index + 1] - distanceLUT[0][index]);
-	//distance = (weight * distanceLUT[1][index] + (1 - weight) * distanceLUT[1][index + 1]) / 2;
 }
 
+/**
+ * @brief calculates angle based on calibration table.
+ *
+ * Calculates the ratio between the amplitudes of the left and right sensing pads. Searches for the corresponding angle in the calibration table. Saves angle in global variable.
+ *
+ * @param amplitude of left sensing pad
+ * @param amplitude of right sensing pad
+ */
 void calc_angle(uint16_t left, uint16_t right) {
 	int index = 0;
 	float factor = (float) left / (float) right;
@@ -47,6 +82,13 @@ void calc_angle(uint16_t left, uint16_t right) {
 	}
 }
 
+/**
+ * @brief draws arrow based on angle and position on display
+ *
+ * @param direction of the arrow
+ * @param x_pos of the center of the arrow in pixels
+ * @param y_pos of the center of the arrow in pixels
+ */
 void draw_arrow(uint16_t direction, uint16_t x_pos, uint16_t y_pos) {
 
 	arm_sin_cos_f32((float) direction, &sine, &cosine);
@@ -65,6 +107,12 @@ void draw_arrow(uint16_t direction, uint16_t x_pos, uint16_t y_pos) {
 			x_pos + n_points[6], y_pos + n_points[7]);
 }
 
+/**
+ * @brief measures the distance and displays it
+ *
+ * Initiates multiple measurements based on REPETITIONS. Calculates the average amplitudes of left and right sensing pad.
+ * Calculates distance and angle of the mains cable. Displays distance and angle.
+ */
 void measure_distance() {
 //	for (int i = 270; i < 360; i += 5){
 //		draw_arrow(i, 40, 90);
@@ -73,52 +121,16 @@ void measure_distance() {
 
 	uint32_t avg_left = 0;
 	uint32_t avg_right = 0;
-	for (int i = 0; i < 10; i++) {
-//		ADC3_IN13_IN4_scan_init();
-//		ADC3_IN13_IN4_scan_start();
+	for (int i = 0; i < REPETITIONS; i++) {
 		ADC3_scan_init(13, 4);
 		ADC3_scan_start();
-		while (MEAS_data_ready == false);
+		while (MEAS_data_ready == false)
+			;
 		MEAS_data_ready = false;
-		uint32_t *ADC_samples = get_ADC_samples();
-		uint32_t left_max = 0;
-		uint32_t right_max = 0;
-		uint32_t left_min = 5000;
-		uint32_t right_min = 5000;
-		double left_value, right_value;
-		int mov_avg = 4;
-		for (int i = 2; i < (get_ADC_NUMS() - 2); i++) {
-//			right_value = 0;
-//			left_value = 0;
-//			for (int j = 0; j <= mov_avg; j++){
-//				right_value += ADC_samples[2*(j - mov_avg) + 1];
-//				left_value += ADC_samples[2*(j - mov_avg)];
-//			}
-//
-//			right_value /= (mov_avg * 2 + 1);
-//			left_value /= (mov_avg * 2 + 1);
-			left_value = (ADC_samples[2*(i-2)+1] + ADC_samples[2*(i-1)+1] + ADC_samples[2*i+1] + ADC_samples[2*(i+1)+1] + ADC_samples[2*(i+2)+1]) / 5;
-			right_value = (ADC_samples[2*(i-2)] + ADC_samples[2*(i-1)] + ADC_samples[2*i] + ADC_samples[2*(i+1)] + ADC_samples[2*(i+2)]) / 5;
-
-			if ((uint32_t)left_value > left_max) {
-				left_max = (uint32_t)left_value;
-			}
-			if ((uint32_t)right_value > right_max) {
-				right_max = (uint32_t)right_value;
-			}
-			if ((uint32_t)left_value < left_min) {
-				left_min = (uint32_t)left_value;
-			}
-			if ((uint32_t)right_value < right_min) {
-				right_min = (uint32_t)right_value;
-			}
-
-		}
-		avg_left += (left_max - left_min);
-		avg_right += (right_max - right_min);
+		MEAS_average(&avg_left, &avg_right);
 	}
-	avg_right /= 10;
-	avg_left /= 10;
+	avg_right /= REPETITIONS;
+	avg_left /= REPETITIONS;
 
 	calc_distance(avg_left, avg_right);
 	calc_angle(avg_left, avg_right);
@@ -131,24 +143,25 @@ void measure_distance() {
 	/* Clear the display */
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
+	MENU_draw();
 	/* Write first 2 samples as numbers */
 	BSP_LCD_SetFont(&Font24);
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	char text[16];
 	snprintf(text, 15, "ANGLE: %4d", (int) angle);
-	BSP_LCD_DisplayStringAt(0, 200, (uint8_t*) text, LEFT_MODE);
+	BSP_LCD_DisplayStringAt(0, 180, (uint8_t*) text, LEFT_MODE);
 	snprintf(text, 15, "LEFT: %4d", (int) (avg_left));
-	BSP_LCD_DisplayStringAt(0, 220, (uint8_t*) text, LEFT_MODE);
+	BSP_LCD_DisplayStringAt(0, 200, (uint8_t*) text, LEFT_MODE);
 	snprintf(text, 15, "RIGHT: %4d", (int) (avg_right));
-	BSP_LCD_DisplayStringAt(0, 240, (uint8_t*) text, LEFT_MODE);
+	BSP_LCD_DisplayStringAt(0, 220, (uint8_t*) text, LEFT_MODE);
 
 	if (distance >= 100) {
 		snprintf(text, 15, "Dist: >100 mm");
 	} else {
 		snprintf(text, 15, "Dist: %4d mm", (int) (distance));
 	}
-	BSP_LCD_DisplayStringAt(0, 260, (uint8_t*) text, LEFT_MODE);
+	BSP_LCD_DisplayStringAt(0, 240, (uint8_t*) text, LEFT_MODE);
 	draw_arrow(360 + angle, /*((uint16_t)(BSP_LCD_GetXSize() / 2))*/90, 90);
 
 }
