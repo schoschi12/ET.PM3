@@ -14,6 +14,6 @@
 #include <stdbool.h>
 #include "measuring.h"
 
-void measure_current_HAL(uint32_t *current_left, uint32_t *current_right);
+double measure_current_HAL(void);
 
 #endif /* INC_STROMMESSUNG_H_ */

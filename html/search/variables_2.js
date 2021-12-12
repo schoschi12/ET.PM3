@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['dac_5factive_146',['DAC_active',['../measuring_8h.html#a69a35c5e5ae036f9089962dbc385aa71',1,'DAC_active():&#160;measuring.c'],['../measuring_8c.html#a69a35c5e5ae036f9089962dbc385aa71',1,'DAC_active():&#160;measuring.c']]],
-  ['dac_5fsample_147',['DAC_sample',['../measuring_8c.html#a8da5353c93f5798cf6c95956418a2210',1,'measuring.c']]]
+  ['correction_0',['correction',['../distance_8c.html#a0de82eb7fa308eec612809ddc5469a16',1,'distance.c']]],
+  ['cosine_1',['cosine',['../distance_8c.html#a5ba97e0f81fecfc53d5b2f0dc06b74ba',1,'distance.c']]]
 ];

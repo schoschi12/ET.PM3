@@ -51,6 +51,7 @@ uint32_t *get_ADC_samples(void);
 int get_ADC_NUMS(void);
 
 void MEAS_show_data(void);
+void MEAS_show_data_current(double current);
 
 
 #endif

@@ -11,6 +11,7 @@
  * @date	17.06.2021
  *****************************************************************************/
 
+
 /******************************************************************************
  * Includes
  *****************************************************************************/
@@ -26,24 +27,23 @@
 #include "strommessung.h"
 #include "distance.h"
 
+
 /******************************************************************************
  * Defines
  *****************************************************************************/
 
+
 /******************************************************************************
  * Variables
  *****************************************************************************/
-RTC_HandleTypeDef hrtc;
-#define RtcHandle &hrtc
-
+static uint32_t timer_value_ms = 0;
+double dispay_current = 0;
 /******************************************************************************
  * Functions
  *****************************************************************************/
 static void SystemClock_Config(void);	///< System Clock Configuration
 static void gyro_disable(void);			///< Disable the onboard gyroscope
-static void MX_RTC_Init(void);
 static void MX_GPIO_Init(void);
-void tim_TIM7_periodicConfig(uint32_t msPeriod);
 
 /** ***************************************************************************
  * @brief  Main function
@@ -65,6 +65,7 @@ int main(void) {
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());	// Touchscreen
 	/* Uncomment next line to enable touchscreen interrupt */
 	// BSP_TS_ITConfig();					// Enable Touchscreen interrupt
+
 	PB_init();							// Initialize the user pushbutton
 	PB_enableIRQ();						// Enable interrupt on user pushbutton
 
@@ -80,24 +81,19 @@ int main(void) {
 	MEAS_timer_init();					// Configure the timer
 
 	MX_GPIO_Init();
-	MX_RTC_Init();						// Configure RTC
+	//tim_TIM7_periodicConfig(1);
 
-	RTC_TimeTypeDef sTime;
-	tim_TIM7_periodicConfig(500);
 
-	sTime.Hours = 1;
-	sTime.Minutes = 1;
-	sTime.Seconds = 0;
-	HAL_RTC_SetTime(RtcHandle, &sTime, RTC_FORMAT_BCD);
 
 	/* Infinite while loop */
 	while (1) {							// Infinitely loop in main function
 		BSP_LED_Toggle(LED3);			// Visual feedback when running
 
-		if (MEAS_data_ready) {			// Show data if new data available
-			MEAS_data_ready = false;
-			MEAS_show_data();
-		}
+//		if (MEAS_data_ready) {			// Show data if new data available
+//			MEAS_data_ready = false;
+//			//MEAS_show_data();
+//			MEAS_show_data_current(&dispay_current);
+//		}
 
 		if (PB_pressed()) {				// Check if user pushbutton was pressed
 			DAC_active = !DAC_active;	// Toggle DAC on/off
@@ -111,88 +107,40 @@ int main(void) {
 		}
 
 		/* Comment next line if touchscreen interrupt is enabled */
-		MENU_check_transition();
+		if(MENU_get_transition() != MENU_NONE)
+		{
+			MENU_check_transition();
+		}else{
+			MENU_check_transition();
+		}
 
-		int counter = 0;
-		uint32_t current_left, current_right;
 
 		switch (MENU_get_transition()) {	// Handle user menu choice
 		case MENU_NONE:					// No transition => do nothing
 			break;
 		case MENU_ZERO:
-			ADC3_IN4_single_init();
-			ADC3_IN4_single_read();
 			break;
 		case MENU_ONE:
-			ADC3_IN4_timer_init();
-			ADC3_IN4_timer_start();
+			//MENU_draw1();
+
+				dispay_current = measure_current_HAL();
+				if (MEAS_data_ready) {			// Show data if new data available
+					MEAS_data_ready = false;
+					//MEAS_show_data();
+					MEAS_show_data_current(dispay_current);
+					}
+
+
 			break;
 		case MENU_TWO:
-			ADC3_IN4_DMA_init();
-			ADC3_IN4_DMA_start();
+			//MENU_draw1();
+			measure_distance();
 			break;
 		case MENU_THREE:
-			ADC1_IN13_ADC2_IN5_dual_init();
-			ADC1_IN13_ADC2_IN5_dual_start();
 			break;
 		case MENU_FOUR:
-			//ADC2_IN13_IN5_scan_init();
-			//ADC2_IN13_IN5_scan_start();
-			measure_current_HAL(&current_left, &current_right);
 			break;
 		case MENU_FIVE:
-//			while(1){
-//				ADC3_IN13_IN4_scan_init();
-//				ADC3_IN13_IN4_scan_start();
-//				while(MEAS_data_ready == false);
-//				MEAS_data_ready = false;
-//				uint32_t *ADC_samples = get_ADC_samples();
-//				uint32_t left_max = 0;
-//				uint32_t right_max = 0;
-//				uint32_t left_min = 5000;
-//				uint32_t right_min = 5000;
-//				for (int i = 0; i < get_ADC_NUMS(); i++){
-//					if (ADC_samples[2*i] > left_max){
-//						left_max = ADC_samples[2*i];
-//					}
-//					if (ADC_samples[2*i+1] > right_max){
-//						right_max = ADC_samples[2*i+1];
-//					}
-//					if (ADC_samples[2*i] < left_min){
-//						left_min = ADC_samples[2*i];
-//					}
-//					if (ADC_samples[2*i+1] < right_min){
-//						right_min = ADC_samples[2*i+1];
-//					}
-//
-//				}
-//
-//				measure_current_HAL_Left();
-//				//display result
-//				const uint32_t Y_OFFSET = 260;
-//				const uint32_t X_SIZE = 240;
-//				uint32_t data;
-//				uint32_t data_last;
-//				/* Clear the display */
-//				BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-//				BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
-//				/* Write first 2 samples as numbers */
-//				BSP_LCD_SetFont(&Font24);
-//				BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-//				BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-//				char text[16];
-//				snprintf(text, 15, "LEFT: %4d", (int)(left_max-left_min));
-//				BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
-//				snprintf(text, 15, "RIGHT: %4d", (int)(right_max-right_min));
-//				BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
-//				HAL_Delay(200);
-//
-//			}
-			while (1) {
-				measure_distance();
-				//HAL_Delay(200);
-			}
-
 			break;
 		default:						// Should never occur
 			break;
@@ -202,21 +150,21 @@ int main(void) {
 	}
 }
 
+
 /** ***************************************************************************
  * @brief System Clock Configuration
  *
  *****************************************************************************/
-static void SystemClock_Config(void) {
-	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
-	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
-	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
+static void SystemClock_Config(void){
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 	/* Configure the main internal regulator output voltage */
 	__HAL_RCC_PWR_CLK_ENABLE();
 	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 	/* Initialize High Speed External Oscillator and PLL circuits */
 	//RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI
-			| RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
 	RCC_OscInitStruct.LSIState = RCC_LSI_ON;
 	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -235,16 +183,16 @@ static void SystemClock_Config(void) {
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 	HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 	/* Initialize PLL and clock divider for the LCD */
-	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC
-			| RCC_PERIPHCLK_RTC;
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC|RCC_PERIPHCLK_RTC;
 	PeriphClkInitStruct.PLLSAI.PLLSAIN = 192;
 	PeriphClkInitStruct.PLLSAI.PLLSAIR = 4;
 	PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_8;
-	PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+	 PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
 	HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 	/* Set clock prescaler for ADCs */
 	ADC->CCR |= ADC_CCR_ADCPRE_0;
 }
+
 
 /** ***************************************************************************
  * @brief Disable the GYRO on the microcontroller board.
@@ -258,7 +206,8 @@ static void SystemClock_Config(void) {
  * @n An other solution would be to remove the GYRO
  * from the microcontroller board by unsoldering it.
  *****************************************************************************/
-static void gyro_disable(void) {
+static void gyro_disable(void)
+{
 	__HAL_RCC_GPIOC_CLK_ENABLE();		// Enable Clock for GPIO port C
 	/* Disable PC1 and PF8 first */
 	GPIOC->MODER &= ~GPIO_MODER_MODER1; // Reset mode for PC1
@@ -274,116 +223,71 @@ static void gyro_disable(void) {
 	GPIOF->MODER |= GPIO_MODER_MODER8_Msk; // Analog mode for PF6 = ADC3_IN4
 }
 
-/**
- * @brief RTC Initialization Function
- * @param None
- * @retval None
- */
-void MX_RTC_Init(void) {
+ void MX_GPIO_Init(void)
+  {
+ 	  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	/* USER CODE BEGIN RTC_Init 0 */
+ 	 /* GPIO Ports Clock Enable */
+ 	   __GPIOG_CLK_ENABLE();
 
-	/* USER CODE END RTC_Init 0 */
+ 	 /*Configure GPIO pin : PG14 */
+ 	  GPIO_InitStruct.Pin = GPIO_PIN_14;
+ 	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;     // digital Output
+ 	  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+ 	  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
-	RTC_TimeTypeDef sTime = { 0 };
-	RTC_DateTypeDef sDate = { 0 };
+ 	  /*Configure GPIO pin : PG13 */
+   	  GPIO_InitStruct.Pin = GPIO_PIN_13;
+   	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;     // digital Output
+   	  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+   	  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
-	/* USER CODE BEGIN RTC_Init 1 */
+ 	  /*Configure GPIO pin : PC13 */
+   	  GPIO_InitStruct.Pin = GPIO_PIN_13;
+   	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;     // Open Drain
+   	  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+   	  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  }
 
-	/* USER CODE END RTC_Init 1 */
-	/** Initialize RTC Only
-	 */
-	hrtc.Instance = RTC;
-	hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-	hrtc.Init.AsynchPrediv = 127;
-	hrtc.Init.SynchPrediv = 255;
-	hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-	hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-	hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-	if (HAL_RTC_Init(&hrtc) != HAL_OK) {
-		// Error_Handler();
-	}
 
-	/* USER CODE BEGIN Check_RTC_BKUP */
+  void tim_TIM7_periodicConfig(uint32_t msPeriod)
+  {
+  	//Enable TIM7 timer
+  	RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
+  	//1 Pulse mode enable
+  	TIM7->CR1 &= ~(TIM_CR1_OPM);
+  	//Mode --> RESET
+  	TIM7->CR2 &= ~(TIM_CR2_MMS);
 
-	/* USER CODE END Check_RTC_BKUP */
+  	//Prescaler
+  	TIM7->PSC = (msPeriod*10)-1;
+  	//Period
+  	TIM7->ARR = 8400 - 1; //->10kHz
 
-	/** Initialize RTC and set the Time and Date
-	 */
-	sTime.Hours = 0x0;
-	sTime.Minutes = 0x0;
-	sTime.Seconds = 0x0;
-	sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-	sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-	if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK) {
-		//Error_Handler();
-	}
-	sDate.WeekDay = RTC_WEEKDAY_MONDAY;
-	sDate.Month = RTC_MONTH_JANUARY;
-	sDate.Date = 0x1;
-	sDate.Year = 0x0;
+  	//Clear Update Interrupt
+  	TIM7->SR &= ~(1UL << 0);
+  	//Enable update interrupt
+  	TIM7->DIER |= 0x01;
+  	//Enable NVIC Interrupt
+  	NVIC_EnableIRQ(TIM7_IRQn);
+  	//Start perodic timer
+  	TIM7->CR1 |= 0x01;
+  }
 
-	if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK) {
-		//Error_Handler();
-	}
-	/* USER CODE BEGIN RTC_Init 2 */
+  void TIM7_IRQHandler(void)
+  {
+  	if(TIM7->SR & 0x01)
+  	{
+  		TIM7->SR &= ~(1UL); //reset flag
+  		timer_value_ms += 1;
+  		if(timer_value_ms > 30000)
+  		{
+  			timer_value_ms = 0;
+  		}
+  	}
+  }
 
-	/* USER CODE END RTC_Init 2 */
-
-}
-
-void MX_GPIO_Init(void) {
-	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-
-	/* GPIO Ports Clock Enable */
-	__GPIOG_CLK_ENABLE()
-	;
-
-	/*Configure GPIO pin : PG14 */
-	GPIO_InitStruct.Pin = GPIO_PIN_14;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; // digital Output
-	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-	/*Configure GPIO pin : PG13 */
-	GPIO_InitStruct.Pin = GPIO_PIN_13;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; // digital Output
-	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-	/*Configure GPIO pin : PC13 */
-	GPIO_InitStruct.Pin = GPIO_PIN_13;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD; // Open Drain
-	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-}
-
-void tim_TIM7_periodicConfig(uint32_t msPeriod) {
-	//Enable TIM7 timer
-	RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
-	//1 Pulse mode enable
-	TIM7->CR1 &= ~(TIM_CR1_OPM);
-	//Mode --> RESET
-	TIM7->CR2 &= ~(TIM_CR2_MMS);
-
-	//Prescaler
-	TIM7->PSC = (msPeriod * 10) - 1;
-	//Period
-	TIM7->ARR = 8400 - 1; //->10kHz
-
-	//Clear Update Interrupt
-	TIM7->SR &= ~(1UL << 0);
-	//Enable update interrupt
-	TIM7->DIER |= 0x01;
-	//Enable NVIC Interrupt
-	NVIC_EnableIRQ(TIM7_IRQn);
-	//Start perodic timer
-	TIM7->CR1 |= 0x01;
-}
-
-void TIM7_IRQHandler(void) {
-	if (TIM7->SR & 0x01) {
-		TIM7->SR &= ~(1UL);
-		HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_14);
-	}
-}
+  void reset_timer7_value(void)
+  {
+	  timer_value_ms = 0;
+  }

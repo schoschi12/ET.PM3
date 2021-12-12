@@ -51,7 +51,6 @@
  * @date 17.06.2021
  *****************************************************************************/
 
-
 /******************************************************************************
  * Includes
  *****************************************************************************/
@@ -75,7 +74,6 @@
 #define TIM_TOP			9			///< Timer top value
 #define TIM_PRESCALE	(TIM_CLOCK/ADC_FS/(TIM_TOP+1)-1) ///< Clock prescaler
 
-
 /******************************************************************************
  * Variables
  *****************************************************************************/
@@ -84,19 +82,17 @@ uint32_t MEAS_input_count = 1;			///< 1 or 2 input channels?
 bool DAC_active = false;				///< DAC output active?
 
 static uint32_t ADC_sample_count = 0;	///< Index for buffer
-static uint32_t ADC_samples[2*ADC_NUMS];///< ADC values of max. 2 input channels
+static uint32_t ADC_samples[2 * ADC_NUMS];///< ADC values of max. 2 input channels
 static uint32_t DAC_sample = 0;			///< DAC output value
-
 
 /******************************************************************************
  * Functions
  *****************************************************************************/
-int get_ADC_NUMS(void){
+int get_ADC_NUMS(void) {
 	return ADC_NUMS;
 }
 
-
-uint32_t *get_ADC_samples(void){
+uint32_t* get_ADC_samples(void) {
 	return ADC_samples;
 }
 
@@ -109,16 +105,14 @@ uint32_t *get_ADC_samples(void){
  * - ADC12_IN5 = GPIO PA5
  * - DAC_OUT2 = GPIO PA5 (= same GPIO as ADC12_IN5)
  *****************************************************************************/
-void MEAS_GPIO_analog_init(void)
-{
+void MEAS_GPIO_analog_init(void) {
 	__HAL_RCC_GPIOF_CLK_ENABLE();		// Enable Clock for GPIO port F
 	GPIOF->MODER |= (GPIO_MODER_MODER6_Msk);// Analog mode for PF6 = ADC3_IN4
 	__HAL_RCC_GPIOC_CLK_ENABLE();		// Enable Clock for GPIO port C
 	GPIOC->MODER |= (GPIO_MODER_MODER3_Msk);// Analog mode for PC3 = ADC123_IN13
 	__HAL_RCC_GPIOA_CLK_ENABLE();		// Enable Clock for GPIO port A
-	GPIOA->MODER |= (GPIO_MODER_MODER5_Msk);// Analog mode for PA5 ADC12_IN5
+	GPIOA->MODER |= (GPIO_MODER_MODER5_Msk);	// Analog mode for PA5 ADC12_IN5
 }
-
 
 /** ***************************************************************************
  * @brief Resets the DAC
@@ -130,7 +124,6 @@ void DAC_reset(void) {
 	RCC->APB1RSTR &= ~RCC_APB1RSTR_DACRST;	// Release reset of the DAC
 }
 
-
 /** ***************************************************************************
  * @brief Initialize the DAC
  *
@@ -138,12 +131,10 @@ void DAC_reset(void) {
  * @n As DAC_OUT2 = GPIO PA5 (= same GPIO as ADC12_IN5)
  * it is possible to monitor the output voltage DAC_OUT2 by the input ADC12_IN5.
  *****************************************************************************/
-void DAC_init(void)
-{
+void DAC_init(void) {
 	__HAL_RCC_DAC_CLK_ENABLE();			// Enable Clock for DAC
 	DAC->CR |= DAC_CR_EN2;				// Enable DAC output 2
 }
-
 
 /** ***************************************************************************
  * @brief Increment the DAC value and write it to the output
@@ -151,10 +142,11 @@ void DAC_init(void)
  *****************************************************************************/
 void DAC_increment(void) {
 	DAC_sample += 20;				// Increment DAC output
-	if (DAC_sample >= (1UL << ADC_DAC_RES)) { DAC_sample = 0; }	// Go to 0
+	if (DAC_sample >= (1UL << ADC_DAC_RES)) {
+		DAC_sample = 0;
+	}	// Go to 0
 	DAC->DHR12R2 = DAC_sample;		// Write new DAC output value
 }
-
 
 /** ***************************************************************************
  * @brief Resets the ADCs and the timer
@@ -167,31 +159,81 @@ void ADC_reset(void) {
 	TIM2->CR1 &= ~TIM_CR1_CEN;				// Disable timer
 }
 
+void MEAS_show_data_current(double current) {
+	const uint32_t Y_OFFSET = 280;
+	const uint32_t X_SIZE = 240;
+	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1; // Scaling factor
+	uint32_t data;
+	uint32_t data_last;
+	/* Clear the display */
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(0, 40, X_SIZE, Y_OFFSET + 1);
+	/* Write first 2 samples as numbers */
+	BSP_LCD_SetFont(&Font24);
+	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	char text[16];
+	snprintf(text, 15, "current %.2lfA", current);
+	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
+// snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
+// BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
+	/* Draw the values of input channel 1 as a curve */
+	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+	data = ADC_samples[MEAS_input_count * 0] / f;
+	for (uint32_t i = 1; i < ADC_NUMS; i++) {
+		data_last = data;
+		data = (ADC_samples[MEAS_input_count * i]) / f;
+		if (data > Y_OFFSET) {
+			data = Y_OFFSET;
+		} // Limit value, prevent crash
+		BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
+				Y_OFFSET - data);
+	}
+	/* Draw the values of input channel 2 (if present) as a curve */
+	if (MEAS_input_count == 2) {
+		BSP_LCD_SetTextColor(LCD_COLOR_RED);
+		data = ADC_samples[MEAS_input_count * 0 + 1] / f;
+		for (uint32_t i = 1; i < ADC_NUMS; i++) {
+			data_last = data;
+			data = (ADC_samples[MEAS_input_count * i + 1]) / f;
+			if (data > Y_OFFSET) {
+				data = Y_OFFSET;
+			} // Limit value, prevent crash
+			BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
+					Y_OFFSET - data);
+		}
+	}
+	/* Clear buffer and flag */
+	for (uint32_t i = 0; i < ADC_NUMS; i++) {
+		ADC_samples[2 * i] = 0;
+		ADC_samples[2 * i + 1] = 0;
+	}
+	ADC_sample_count = 0;
+}
 
 /** ***************************************************************************
  * @brief Initialize the ADC in single conversion mode
  *
  * The input is ADC3_IN4 = GPIO PF6
  *****************************************************************************/
-void ADC3_IN4_single_init(void)
-{
+void ADC3_IN4_single_init(void) {
 	MEAS_input_count = 1;				// Only 1 input is converted
 	__HAL_RCC_ADC3_CLK_ENABLE();		// Enable Clock for ADC3
 	ADC3->SQR3 |= (4UL << ADC_SQR3_SQ1_Pos);	// Input 4 = first conversion
 }
-
 
 /** ***************************************************************************
  * @brief Read one single value of the ADC in single conversion mode
  *
  * Start the conversion, wait in a while loop for end of conversion, read data.
  *****************************************************************************/
-void ADC3_IN4_single_read(void)
-{
+void ADC3_IN4_single_read(void) {
 	ADC3->CR2 |= ADC_CR2_ADON;			// Enable ADC3
 	HAL_Delay(1);						// ADC needs some time to stabilize
 	ADC3->CR2 |= ADC_CR2_SWSTART;
-	while (!(ADC3->SR & ADC_SR_EOC)) { ; }	// Wait for end of conversion
+	while (!(ADC3->SR & ADC_SR_EOC)) {
+		;
+	}	// Wait for end of conversion
 	ADC_samples[0] = ADC3->DR;			// Read the converted value
 	ADC3->CR2 &= ~ADC_CR2_ADON;			// Disable ADC3
 	if (DAC_active) {
@@ -201,14 +243,12 @@ void ADC3_IN4_single_read(void)
 	MEAS_data_ready = true;
 }
 
-
 /** ***************************************************************************
  * @brief Configure the timer to trigger the ADC(s)
  *
  * @note For debugging purposes the timer interrupt might be useful.
  *****************************************************************************/
-void MEAS_timer_init(void)
-{
+void MEAS_timer_init(void) {
 	__HAL_RCC_TIM2_CLK_ENABLE();		// Enable Clock for TIM2
 	TIM2->PSC = TIM_PRESCALE;			// Prescaler for clock freq. = 1MHz
 	TIM2->ARR = TIM_TOP;				// Auto reload = counter top value
@@ -219,7 +259,6 @@ void MEAS_timer_init(void)
 	NVIC_EnableIRQ(TIM2_IRQn);			// Enable interrupt line 0 in the NVIC
 }
 
-
 /** ***************************************************************************
  * @brief Initialize the ADC to be triggered by a timer
  *
@@ -228,8 +267,7 @@ void MEAS_timer_init(void)
  * @n The ADC is configured for end of conversion interrupt.
  * @n The input is ADC3_IN4 = GPIO PF6
  *****************************************************************************/
-void ADC3_IN4_timer_init(void)
-{
+void ADC3_IN4_timer_init(void) {
 	MEAS_input_count = 1;				// Only 1 input is converted
 	__HAL_RCC_ADC3_CLK_ENABLE();		// Enable Clock for ADC3
 	ADC3->SQR3 |= (4UL << ADC_SQR3_SQ1_Pos);	// Input 4 = first conversion
@@ -239,21 +277,18 @@ void ADC3_IN4_timer_init(void)
 
 }
 
-
 /** ***************************************************************************
  * @brief Start the ADC and the timer
  *
  * The ADC isues an end of conversion interrupt.
  * The converted value can be read in the associated interrupt handler.
  *****************************************************************************/
-void ADC3_IN4_timer_start(void)
-{
+void ADC3_IN4_timer_start(void) {
 	NVIC_ClearPendingIRQ(ADC_IRQn);		// Clear pending interrupt on line 0
 	NVIC_EnableIRQ(ADC_IRQn);			// Enable interrupt line 0 in the NVIC
 	ADC3->CR2 |= ADC_CR2_ADON;			// Enable ADC3
 	TIM2->CR1 |= TIM_CR1_CEN;			// Enable timer
 }
-
 
 /** ***************************************************************************
  * @brief Initialize ADC, timer and DMA for data acquisition in the background
@@ -266,8 +301,7 @@ void ADC3_IN4_timer_start(void)
  * @n The DMA triggers the transfer complete interrupt when all data is ready.
  * @n The input is ADC3_IN4 = GPIO PF6
  *****************************************************************************/
-void ADC3_IN4_DMA_init(void)
-{
+void ADC3_IN4_DMA_init(void) {
 	MEAS_input_count = 1;				// Only 1 input is converted
 	__HAL_RCC_ADC3_CLK_ENABLE();		// Enable Clock for ADC3
 	ADC3->SQR3 |= (4UL << ADC_SQR3_SQ1_Pos);	// Input 4 = first conversion
@@ -276,7 +310,9 @@ void ADC3_IN4_DMA_init(void)
 	ADC3->CR2 |= ADC_CR2_DMA;			// Enable DMA mode
 	__HAL_RCC_DMA2_CLK_ENABLE();		// Enable Clock for DMA2
 	DMA2_Stream1->CR &= ~DMA_SxCR_EN;	// Disable the DMA stream 1
-	while (DMA2_Stream1->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+	while (DMA2_Stream1->CR & DMA_SxCR_EN) {
+		;
+	}	// Wait for DMA to finish
 	DMA2->LIFCR |= DMA_LIFCR_CTCIF1;	// Clear transfer complete interrupt fl.
 	DMA2_Stream1->CR |= (2UL << DMA_SxCR_CHSEL_Pos);	// Select channel 2
 	DMA2_Stream1->CR |= DMA_SxCR_PL_1;		// Priority high
@@ -285,17 +321,15 @@ void ADC3_IN4_DMA_init(void)
 	DMA2_Stream1->CR |= DMA_SxCR_MINC;	// Increment memory address pointer
 	DMA2_Stream1->CR |= DMA_SxCR_TCIE;	// Transfer complete interrupt enable
 	DMA2_Stream1->NDTR = ADC_NUMS;		// Number of data items to transfer
-	DMA2_Stream1->PAR = (uint32_t)&ADC3->DR;	// Peripheral register address
-	DMA2_Stream1->M0AR = (uint32_t)ADC_samples;	// Buffer memory loc. address
+	DMA2_Stream1->PAR = (uint32_t) &ADC3->DR;	// Peripheral register address
+	DMA2_Stream1->M0AR = (uint32_t) ADC_samples;// Buffer memory loc. address
 }
-
 
 /** ***************************************************************************
  * @brief Start DMA, ADC and timer
  *
  *****************************************************************************/
-void ADC3_IN4_DMA_start(void)
-{
+void ADC3_IN4_DMA_start(void) {
 	DMA2_Stream1->CR |= DMA_SxCR_EN;	// Enable DMA
 	NVIC_ClearPendingIRQ(DMA2_Stream1_IRQn);	// Clear pending DMA interrupt
 	NVIC_EnableIRQ(DMA2_Stream1_IRQn);	// Enable DMA interrupt in the NVIC
@@ -318,8 +352,7 @@ void ADC3_IN4_DMA_start(void)
  * @n The input used with ADC1 is ADC123_IN13 = GPIO PC3
  * @n The input used with ADC2 is ADC12_IN5 = GPIO PA5
  *****************************************************************************/
-void ADC1_IN13_ADC2_IN5_dual_init(void)
-{
+void ADC1_IN13_ADC2_IN5_dual_init(void) {
 	MEAS_input_count = 2;				// Only 1 input is converted
 	__HAL_RCC_ADC1_CLK_ENABLE();		// Enable Clock for ADC1
 	__HAL_RCC_ADC2_CLK_ENABLE();		// Enable Clock for ADC2
@@ -331,7 +364,9 @@ void ADC1_IN13_ADC2_IN5_dual_init(void)
 	ADC2->SQR3 |= (5UL << ADC_SQR3_SQ1_Pos);	// Input 5 = first conversion
 	__HAL_RCC_DMA2_CLK_ENABLE();		// Enable Clock for DMA2
 	DMA2_Stream4->CR &= ~DMA_SxCR_EN;	// Disable the DMA stream 4
-	while (DMA2_Stream4->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+	while (DMA2_Stream4->CR & DMA_SxCR_EN) {
+		;
+	}	// Wait for DMA to finish
 	DMA2->HIFCR |= DMA_HIFCR_CTCIF4;	// Clear transfer complete interrupt fl.
 	DMA2_Stream4->CR |= (0UL << DMA_SxCR_CHSEL_Pos);	// Select channel 0
 	DMA2_Stream4->CR |= DMA_SxCR_PL_1;		// Priority high
@@ -340,17 +375,15 @@ void ADC1_IN13_ADC2_IN5_dual_init(void)
 	DMA2_Stream4->CR |= DMA_SxCR_MINC;	// Increment memory address pointer
 	DMA2_Stream4->CR |= DMA_SxCR_TCIE;	// Transfer complete interrupt enable
 	DMA2_Stream4->NDTR = ADC_NUMS;		// Number of data items to transfer
-	DMA2_Stream4->PAR = (uint32_t)&ADC->CDR;	// Peripheral register address
-	DMA2_Stream4->M0AR = (uint32_t)ADC_samples;	// Buffer memory loc. address
+	DMA2_Stream4->PAR = (uint32_t) &ADC->CDR;	// Peripheral register address
+	DMA2_Stream4->M0AR = (uint32_t) ADC_samples;// Buffer memory loc. address
 }
-
 
 /** ***************************************************************************
  * @brief Start DMA, ADC and timer
  *
  *****************************************************************************/
-void ADC1_IN13_ADC2_IN5_dual_start(void)
-{
+void ADC1_IN13_ADC2_IN5_dual_start(void) {
 	DMA2_Stream4->CR |= DMA_SxCR_EN;	// Enable DMA
 	NVIC_ClearPendingIRQ(DMA2_Stream4_IRQn);	// Clear pending DMA interrupt
 	NVIC_EnableIRQ(DMA2_Stream4_IRQn);	// Enable DMA interrupt in the NVIC
@@ -358,7 +391,6 @@ void ADC1_IN13_ADC2_IN5_dual_start(void)
 	ADC2->CR2 |= ADC_CR2_ADON;			// Enable ADC2
 	TIM2->CR1 |= TIM_CR1_CEN;			// Enable timer
 }
-
 
 /** ***************************************************************************
  * @brief Initialize ADC, timer and DMA for sequential acquisition = scan mode
@@ -371,8 +403,7 @@ void ADC1_IN13_ADC2_IN5_dual_start(void)
  * @n The DMA triggers the transfer complete interrupt when all data is ready.
  * @n The inputs used are ADC123_IN13 = GPIO PC3 and ADC12_IN5 = GPIO PA5
  *****************************************************************************/
-void ADC2_IN13_IN5_scan_init(void)
-{
+void ADC2_IN13_IN5_scan_init(void) {
 	MEAS_input_count = 2;				// Only 1 input is converted
 	__HAL_RCC_ADC2_CLK_ENABLE();		// Enable Clock for ADC2
 	ADC2->SQR1 |= ADC_SQR1_L_0;			// Convert 2 inputs
@@ -384,7 +415,9 @@ void ADC2_IN13_IN5_scan_init(void)
 	ADC2->CR2 |= ADC_CR2_DMA;			// Enable DMA mode
 	__HAL_RCC_DMA2_CLK_ENABLE();		// Enable Clock for DMA2
 	DMA2_Stream3->CR &= ~DMA_SxCR_EN;	// Disable the DMA stream 3
-	while (DMA2_Stream3->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+	while (DMA2_Stream3->CR & DMA_SxCR_EN) {
+		;
+	}	// Wait for DMA to finish
 	DMA2->LIFCR |= DMA_LIFCR_CTCIF3;	// Clear transfer complete interrupt fl.
 	DMA2_Stream3->CR |= (1UL << DMA_SxCR_CHSEL_Pos);	// Select channel 1
 	DMA2_Stream3->CR |= DMA_SxCR_PL_1;		// Priority high
@@ -392,25 +425,22 @@ void ADC2_IN13_IN5_scan_init(void)
 	DMA2_Stream3->CR |= DMA_SxCR_PSIZE_1;	// Peripheral data size = 32 bit
 	DMA2_Stream3->CR |= DMA_SxCR_MINC;	// Increment memory address pointer
 	DMA2_Stream3->CR |= DMA_SxCR_TCIE;	// Transfer complete interrupt enable
-	DMA2_Stream3->NDTR = 2*ADC_NUMS;	// Number of data items to transfer
-	DMA2_Stream3->PAR = (uint32_t)&ADC2->DR;	// Peripheral register address
-	DMA2_Stream3->M0AR = (uint32_t)ADC_samples;	// Buffer memory loc. address
+	DMA2_Stream3->NDTR = 2 * ADC_NUMS;	// Number of data items to transfer
+	DMA2_Stream3->PAR = (uint32_t) &ADC2->DR;	// Peripheral register address
+	DMA2_Stream3->M0AR = (uint32_t) ADC_samples;// Buffer memory loc. address
 }
-
 
 /** ***************************************************************************
  * @brief Start DMA, ADC and timer
  *
  *****************************************************************************/
-void ADC2_IN13_IN5_scan_start(void)
-{
+void ADC2_IN13_IN5_scan_start(void) {
 	DMA2_Stream3->CR |= DMA_SxCR_EN;	// Enable DMA
 	NVIC_ClearPendingIRQ(DMA2_Stream3_IRQn);	// Clear pending DMA interrupt
 	NVIC_EnableIRQ(DMA2_Stream3_IRQn);	// Enable DMA interrupt in the NVIC
 	ADC2->CR2 |= ADC_CR2_ADON;			// Enable ADC2
 	TIM2->CR1 |= TIM_CR1_CEN;			// Enable timer
 }
-
 
 /** ***************************************************************************
  * @brief Initialize ADC, timer and DMA for sequential acquisition = scan mode
@@ -423,8 +453,7 @@ void ADC2_IN13_IN5_scan_start(void)
  * @n The DMA triggers the transfer complete interrupt when all data is ready.
  * @n The inputs used are ADC123_IN13 = GPIO PC3 and ADC3_IN4 = GPIO PF6
  *****************************************************************************/
-void ADC3_IN13_IN4_scan_init(void)
-{
+void ADC3_IN13_IN4_scan_init(void) {
 	MEAS_input_count = 2;				// Only 1 input is converted
 	__HAL_RCC_ADC3_CLK_ENABLE();		// Enable Clock for ADC3
 	ADC3->SQR1 |= ADC_SQR1_L_0;			// Convert 2 inputs
@@ -436,7 +465,9 @@ void ADC3_IN13_IN4_scan_init(void)
 	ADC3->CR2 |= ADC_CR2_DMA;			// Enable DMA mode
 	__HAL_RCC_DMA2_CLK_ENABLE();		// Enable Clock for DMA2
 	DMA2_Stream1->CR &= ~DMA_SxCR_EN;	// Disable the DMA stream 1
-	while (DMA2_Stream1->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+	while (DMA2_Stream1->CR & DMA_SxCR_EN) {
+		;
+	}	// Wait for DMA to finish
 	DMA2->LIFCR |= DMA_LIFCR_CTCIF1;	// Clear transfer complete interrupt fl.
 	DMA2_Stream1->CR |= (2UL << DMA_SxCR_CHSEL_Pos);	// Select channel 2
 	DMA2_Stream1->CR |= DMA_SxCR_PL_1;		// Priority high
@@ -444,19 +475,17 @@ void ADC3_IN13_IN4_scan_init(void)
 	DMA2_Stream1->CR |= DMA_SxCR_PSIZE_1;	// Peripheral data size = 32 bit
 	DMA2_Stream1->CR |= DMA_SxCR_MINC;	// Increment memory address pointer
 	DMA2_Stream1->CR |= DMA_SxCR_TCIE;	// Transfer complete interrupt enable
-	DMA2_Stream1->NDTR = 2*ADC_NUMS;	// Number of data items to transfer
-	DMA2_Stream1->PAR = (uint32_t)&ADC3->DR;	// Peripheral register address
-	DMA2_Stream1->M0AR = (uint32_t)ADC_samples;	// Buffer memory loc. address
+	DMA2_Stream1->NDTR = 2 * ADC_NUMS;	// Number of data items to transfer
+	DMA2_Stream1->PAR = (uint32_t) &ADC3->DR;	// Peripheral register address
+	DMA2_Stream1->M0AR = (uint32_t) ADC_samples;// Buffer memory loc. address
 
 }
-
 
 /** ***************************************************************************
  * @brief Start DMA, ADC and timer
  *
  *****************************************************************************/
-void ADC3_IN13_IN4_scan_start(void)
-{
+void ADC3_IN13_IN4_scan_start(void) {
 	DMA2_Stream1->CR |= DMA_SxCR_EN;	// Enable DMA
 	NVIC_ClearPendingIRQ(DMA2_Stream1_IRQn);	// Clear pending DMA interrupt
 	NVIC_EnableIRQ(DMA2_Stream1_IRQn);	// Enable DMA interrupt in the NVIC
@@ -475,20 +504,21 @@ void ADC3_IN13_IN4_scan_start(void)
  * @n The DMA triggers the transfer complete interrupt when all data is ready.
  * @n The inputs used are ADC123_IN11 = GPIO PC1 and ADC3_IN6 = GPIO PF8
  *****************************************************************************/
-void ADC3_scan_init(unsigned long channel1, unsigned long channel2)
-{
+void ADC3_scan_init(unsigned long channel1, unsigned long channel2) {
 	MEAS_input_count = 2;				// Only 1 input is converted
 	__HAL_RCC_ADC3_CLK_ENABLE();		// Enable Clock for ADC3
 	ADC3->SQR1 |= ADC_SQR1_L_0;			// Convert 2 inputs
-	ADC3->SQR3 |= (channel1 << ADC_SQR3_SQ1_Pos);	// Input 13 = first conversion
-	ADC3->SQR3 |= (channel2 << ADC_SQR3_SQ2_Pos);	// Input 4 = second conversion
+	ADC3->SQR3 |= (channel1 << ADC_SQR3_SQ1_Pos);// Input 13 = first conversion
+	ADC3->SQR3 |= (channel2 << ADC_SQR3_SQ2_Pos);// Input 4 = second conversion
 	ADC3->CR1 |= ADC_CR1_SCAN;			// Enable scan mode
 	ADC3->CR2 |= (1UL << ADC_CR2_EXTEN_Pos);	// En. ext. trigger on rising e.
 	ADC3->CR2 |= (6UL << ADC_CR2_EXTSEL_Pos);	// Timer 2 TRGO event
 	ADC3->CR2 |= ADC_CR2_DMA;			// Enable DMA mode
 	__HAL_RCC_DMA2_CLK_ENABLE();		// Enable Clock for DMA2
 	DMA2_Stream1->CR &= ~DMA_SxCR_EN;	// Disable the DMA stream 1
-	while (DMA2_Stream1->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+	while (DMA2_Stream1->CR & DMA_SxCR_EN) {
+		;
+	}	// Wait for DMA to finish
 	DMA2->LIFCR |= DMA_LIFCR_CTCIF1;	// Clear transfer complete interrupt fl.
 	DMA2_Stream1->CR |= (2UL << DMA_SxCR_CHSEL_Pos);	// Select channel 2
 	DMA2_Stream1->CR |= DMA_SxCR_PL_1;		// Priority high
@@ -496,19 +526,17 @@ void ADC3_scan_init(unsigned long channel1, unsigned long channel2)
 	DMA2_Stream1->CR |= DMA_SxCR_PSIZE_1;	// Peripheral data size = 32 bit
 	DMA2_Stream1->CR |= DMA_SxCR_MINC;	// Increment memory address pointer
 	DMA2_Stream1->CR |= DMA_SxCR_TCIE;	// Transfer complete interrupt enable
-	DMA2_Stream1->NDTR = 2*ADC_NUMS;	// Number of data items to transfer
-	DMA2_Stream1->PAR = (uint32_t)&ADC3->DR;	// Peripheral register address
-	DMA2_Stream1->M0AR = (uint32_t)ADC_samples;	// Buffer memory loc. address
+	DMA2_Stream1->NDTR = 2 * ADC_NUMS;	// Number of data items to transfer
+	DMA2_Stream1->PAR = (uint32_t) &ADC3->DR;	// Peripheral register address
+	DMA2_Stream1->M0AR = (uint32_t) ADC_samples;// Buffer memory loc. address
 
 }
-
 
 /** ***************************************************************************
  * @brief Start DMA, ADC and timer
  *
  *****************************************************************************/
-void ADC3_scan_start(void)
-{
+void ADC3_scan_start(void) {
 	DMA2_Stream1->CR |= DMA_SxCR_EN;	// Enable DMA
 	NVIC_ClearPendingIRQ(DMA2_Stream1_IRQn);	// Clear pending DMA interrupt
 	NVIC_EnableIRQ(DMA2_Stream1_IRQn);	// Enable DMA interrupt in the NVIC
@@ -522,14 +550,12 @@ void ADC3_scan_start(void)
  * @note This interrupt handler was only used for debugging purposes
  * and to increment the DAC value.
  *****************************************************************************/
-void TIM2_IRQHandler(void)
-{
+void TIM2_IRQHandler(void) {
 	TIM2->SR &= ~TIM_SR_UIF;			// Clear pending interrupt flag
 	if (DAC_active) {
 		DAC_increment();
 	}
 }
-
 
 /** ***************************************************************************
  * @brief Interrupt handler for the ADCs
@@ -537,8 +563,7 @@ void TIM2_IRQHandler(void)
  * Reads one sample from the ADC3 DataRegister and transfers it to a buffer.
  * @n Stops when ADC_NUMS samples have been read.
  *****************************************************************************/
-void ADC_IRQHandler(void)
-{
+void ADC_IRQHandler(void) {
 	if (ADC3->SR & ADC_SR_EOC) {		// Check if ADC3 end of conversion
 		ADC_samples[ADC_sample_count++] = ADC3->DR;	// Read input channel 1 only
 		if (ADC_sample_count >= ADC_NUMS) {		// Buffer full
@@ -551,20 +576,20 @@ void ADC_IRQHandler(void)
 	}
 }
 
-
 /** ***************************************************************************
  * @brief Interrupt handler for DMA2 Stream1
  *
  * The samples from the ADC3 have been transfered to memory by the DMA2 Stream1
  * and are ready for processing.
  *****************************************************************************/
-void DMA2_Stream1_IRQHandler(void)
-{
+void DMA2_Stream1_IRQHandler(void) {
 	if (DMA2->LISR & DMA_LISR_TCIF1) {	// Stream1 transfer compl. interrupt f.
 		NVIC_DisableIRQ(DMA2_Stream1_IRQn);	// Disable DMA interrupt in the NVIC
 		NVIC_ClearPendingIRQ(DMA2_Stream1_IRQn);// Clear pending DMA interrupt
 		DMA2_Stream1->CR &= ~DMA_SxCR_EN;	// Disable the DMA
-		while (DMA2_Stream1->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+		while (DMA2_Stream1->CR & DMA_SxCR_EN) {
+			;
+		}	// Wait for DMA to finish
 		DMA2->LIFCR |= DMA_LIFCR_CTCIF1;// Clear transfer complete interrupt fl.
 		TIM2->CR1 &= ~TIM_CR1_CEN;		// Disable timer
 		ADC3->CR2 &= ~ADC_CR2_ADON;		// Disable ADC3
@@ -574,20 +599,20 @@ void DMA2_Stream1_IRQHandler(void)
 	}
 }
 
-
 /** ***************************************************************************
  * @brief Interrupt handler for DMA2 Stream3
  *
  * The samples from the ADC3 have been transfered to memory by the DMA2 Stream1
  * and are ready for processing.
  *****************************************************************************/
-void DMA2_Stream3_IRQHandler(void)
-{
+void DMA2_Stream3_IRQHandler(void) {
 	if (DMA2->LISR & DMA_LISR_TCIF3) {	// Stream3 transfer compl. interrupt f.
 		NVIC_DisableIRQ(DMA2_Stream3_IRQn);	// Disable DMA interrupt in the NVIC
 		NVIC_ClearPendingIRQ(DMA2_Stream3_IRQn);// Clear pending DMA interrupt
 		DMA2_Stream3->CR &= ~DMA_SxCR_EN;	// Disable the DMA
-		while (DMA2_Stream3->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+		while (DMA2_Stream3->CR & DMA_SxCR_EN) {
+			;
+		}	// Wait for DMA to finish
 		DMA2->LIFCR |= DMA_LIFCR_CTCIF3;// Clear transfer complete interrupt fl.
 		TIM2->CR1 &= ~TIM_CR1_CEN;		// Disable timer
 		ADC2->CR2 &= ~ADC_CR2_ADON;		// Disable ADC2
@@ -596,7 +621,6 @@ void DMA2_Stream3_IRQHandler(void)
 		MEAS_data_ready = true;
 	}
 }
-
 
 /** ***************************************************************************
  * @brief Interrupt handler for DMA2 Stream4
@@ -609,28 +633,28 @@ void DMA2_Stream3_IRQHandler(void)
  * ADC_CDR[31:0] = ADC2_DR[15:0] | ADC1_DR[15:0]
  * and are therefore extracted before further processing.
  *****************************************************************************/
-void DMA2_Stream4_IRQHandler(void)
-{
+void DMA2_Stream4_IRQHandler(void) {
 	if (DMA2->HISR & DMA_HISR_TCIF4) {	// Stream4 transfer compl. interrupt f.
 		NVIC_DisableIRQ(DMA2_Stream4_IRQn);	// Disable DMA interrupt in the NVIC
 		NVIC_ClearPendingIRQ(DMA2_Stream4_IRQn);// Clear pending DMA interrupt
 		DMA2_Stream4->CR &= ~DMA_SxCR_EN;	// Disable the DMA
-		while (DMA2_Stream4->CR & DMA_SxCR_EN) { ; }	// Wait for DMA to finish
+		while (DMA2_Stream4->CR & DMA_SxCR_EN) {
+			;
+		}	// Wait for DMA to finish
 		DMA2->HIFCR |= DMA_HIFCR_CTCIF4;// Clear transfer complete interrupt fl.
 		TIM2->CR1 &= ~TIM_CR1_CEN;		// Disable timer
 		ADC1->CR2 &= ~ADC_CR2_ADON;		// Disable ADC1
 		ADC2->CR2 &= ~ADC_CR2_ADON;		// Disable ADC2
 		ADC->CCR &= ~ADC_CCR_DMA_1;		// Disable DMA mode
 		/* Extract combined samples */
-		for (int32_t i = ADC_NUMS-1; i >= 0; i--){
-			ADC_samples[2*i+1] = (ADC_samples[i] >> 16);
-			ADC_samples[2*i]   = (ADC_samples[i] & 0xffff);
+		for (int32_t i = ADC_NUMS - 1; i >= 0; i--) {
+			ADC_samples[2 * i + 1] = (ADC_samples[i] >> 16);
+			ADC_samples[2 * i] = (ADC_samples[i] & 0xffff);
 		}
 		ADC_reset();
 		MEAS_data_ready = true;
 	}
 }
-
 
 /** ***************************************************************************
  * @brief Draw buffer data as curves
@@ -644,8 +668,7 @@ void DMA2_Stream4_IRQHandler(void)
  * and should be moved to a separate file in the final version
  * because displaying is not related to measuring.
  *****************************************************************************/
-void MEAS_show_data(void)
-{
+void MEAS_show_data(void) {
 	const uint32_t Y_OFFSET = 260;
 	const uint32_t X_SIZE = 240;
 	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;	// Scaling factor
@@ -653,40 +676,46 @@ void MEAS_show_data(void)
 	uint32_t data_last;
 	/* Clear the display */
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
+	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
 	/* Write first 2 samples as numbers */
 	BSP_LCD_SetFont(&Font24);
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	char text[16];
-	snprintf(text, 15, "1. sample %4d", (int)(ADC_samples[0]));
-	BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
-	snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
-	BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
+	snprintf(text, 15, "1. sample %4d", (int) (ADC_samples[0]));
+	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
+	snprintf(text, 15, "2. sample %4d", (int) (ADC_samples[1]));
+	BSP_LCD_DisplayStringAt(0, 80, (uint8_t*) text, LEFT_MODE);
 	/* Draw the  values of input channel 1 as a curve */
 	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-	data = ADC_samples[MEAS_input_count*0] / f;
-	for (uint32_t i = 1; i < ADC_NUMS; i++){
+	data = ADC_samples[MEAS_input_count * 0] / f;
+	for (uint32_t i = 1; i < ADC_NUMS; i++) {
 		data_last = data;
-		data = (ADC_samples[MEAS_input_count*i]) / f;
-		if (data > Y_OFFSET) { data = Y_OFFSET; }// Limit value, prevent crash
-		BSP_LCD_DrawLine(4*(i-1), Y_OFFSET-data_last, 4*i, Y_OFFSET-data);
+		data = (ADC_samples[MEAS_input_count * i]) / f;
+		if (data > Y_OFFSET) {
+			data = Y_OFFSET;
+		}	// Limit value, prevent crash
+		BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
+				Y_OFFSET - data);
 	}
 	/* Draw the  values of input channel 2 (if present) as a curve */
 	if (MEAS_input_count == 2) {
 		BSP_LCD_SetTextColor(LCD_COLOR_RED);
-		data = ADC_samples[MEAS_input_count*0+1] / f;
-		for (uint32_t i = 1; i < ADC_NUMS; i++){
+		data = ADC_samples[MEAS_input_count * 0 + 1] / f;
+		for (uint32_t i = 1; i < ADC_NUMS; i++) {
 			data_last = data;
-			data = (ADC_samples[MEAS_input_count*i+1]) / f;
-			if (data > Y_OFFSET) { data = Y_OFFSET; }// Limit value, prevent crash
-			BSP_LCD_DrawLine(4*(i-1), Y_OFFSET-data_last, 4*i, Y_OFFSET-data);
+			data = (ADC_samples[MEAS_input_count * i + 1]) / f;
+			if (data > Y_OFFSET) {
+				data = Y_OFFSET;
+			}	// Limit value, prevent crash
+			BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
+					Y_OFFSET - data);
 		}
 	}
 	/* Clear buffer and flag */
-	for (uint32_t i = 0; i < ADC_NUMS; i++){
-		ADC_samples[2*i] = 0;
-		ADC_samples[2*i+1] = 0;
+	for (uint32_t i = 0; i < ADC_NUMS; i++) {
+		ADC_samples[2 * i] = 0;
+		ADC_samples[2 * i + 1] = 0;
 	}
 	ADC_sample_count = 0;
 }

@@ -45,15 +45,18 @@
  *****************************************************************************/
 static MENU_item_t MENU_transition = MENU_NONE;	///< Transition to this menu
 static MENU_entry_t MENU_entry[MENU_ENTRY_COUNT] = {
-		{"sin-",	"gle",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTBLUE},
-		{"Timer",	"+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTGREEN},
-		{"DMA",	    "+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTRED},
-		{"DMA",	    "dual",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTCYAN},
-		{"B-",	    "field",	LCD_COLOR_BLACK,	LCD_COLOR_LIGHTMAGENTA},
-		{"E-",		"field",	LCD_COLOR_BLACK,	LCD_COLOR_LIGHTYELLOW}
+		{"Switch",	"off",		LCD_COLOR_BLACK,	LCD_COLOR_RED},
+		{"Current",  "[I] = A",	LCD_COLOR_BLACK,	LCD_COLOR_BLUE},
+		{"Distance", "[d] = m",	LCD_COLOR_BLACK,	LCD_COLOR_GREEN}
 };										///< All the menu entries
 
-
+static MENU_entry_t SUB_MENU_entry[SUB_MENU_ENTRY_COUNT] = {
+		//{"sin-",	"gle",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTBLUE},
+		//{"Timer",	"+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTGREEN},
+		//{"DMA",	    "+IRQ",		LCD_COLOR_BLACK,	LCD_COLOR_LIGHTRED},
+		{"Switch",	"off",		LCD_COLOR_BLACK,	LCD_COLOR_RED},
+		{"go", "back",			LCD_COLOR_BLACK,	LCD_COLOR_GREEN}
+};
 /******************************************************************************
  * Functions
  *****************************************************************************/
@@ -77,7 +80,7 @@ void MENU_draw(void)
 	for (uint32_t i = 0; i < MENU_ENTRY_COUNT; i++) {
 		x = i*w;
 		BSP_LCD_SetTextColor(MENU_entry[i].back_color);
-		BSP_LCD_FillRect(x+m, y+m, w-2*m, h-2*m);
+		BSP_LCD_FillRect(BSP_LCD_GetXSize()-80-x+m, BSP_LCD_GetYSize()-40-y+m, w-2*m, h-2*m);
 		BSP_LCD_SetBackColor(MENU_entry[i].back_color);
 		BSP_LCD_SetTextColor(MENU_entry[i].text_color);
 		BSP_LCD_DisplayStringAt(x+3*m, y+3*m,
@@ -86,7 +89,6 @@ void MENU_draw(void)
 				(uint8_t *)MENU_entry[i].line2, LEFT_MODE);
 	}
 }
-
 
 /** ***************************************************************************
  * @brief Shows a hint at startup.
@@ -97,14 +99,11 @@ void MENU_hint(void)
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_SetFont(&Font24);
-	BSP_LCD_DisplayStringAt(5,10, (uint8_t *)"DEMO-CODE", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5,10, (uint8_t *)"Cable-Monitor", LEFT_MODE);
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_DisplayStringAt(5, 60, (uint8_t *)"Touch a menu item", LEFT_MODE);
 	BSP_LCD_DisplayStringAt(5, 80, (uint8_t *)"to start an ADC demo", LEFT_MODE);
-	BSP_LCD_DisplayStringAt(5, 110, (uint8_t *)"Switch DAC on/off", LEFT_MODE);
-	BSP_LCD_DisplayStringAt(5, 130, (uint8_t *)"with blue pushbutton", LEFT_MODE);
-	BSP_LCD_DisplayStringAt(5, 160, (uint8_t *)"(c) hhrt@zhaw.ch", LEFT_MODE);
-	BSP_LCD_DisplayStringAt(5, 160, (uint8_t *)"Version 17.06.2021", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5, 100, (uint8_t *)"Version 10.12.2021", LEFT_MODE);
 }
 
 
@@ -175,26 +174,27 @@ void MENU_check_transition(void)
 // Evalboard revision E (blue) has an inverted y-axis in the touch controller
 	TS_State.Y = TS_State.Y;//BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
 #endif
-	if (TS_State.TouchDetected) {		// If a touch was detected
-		/* Do only if last transition not pending anymore */
-		if (MENU_NONE == MENU_transition) {
-			item_old = item_new;		// Store old item
-			/* If touched within the menu bar? */
-			if ((MENU_Y < TS_State.Y) && (MENU_Y+MENU_HEIGHT > TS_State.Y)) {
-				item_new = (BSP_LCD_GetXSize() - TS_State.X)	// Calculate new item
-						/ (BSP_LCD_GetXSize()/MENU_ENTRY_COUNT);
-				if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
-					item_new = MENU_NONE;	// Out of bounds
-				}
-				if (item_new == item_old) {	// 2 times the same menu item
-					item_new = MENU_NONE;
-					MENU_transition = item_old;
+		if (TS_State.TouchDetected) {		// If a touch was detected
+			/* Do only if last transition not pending anymore */
+			if (MENU_NONE == MENU_transition) {
+				item_old = item_new;		// Store old item
+				/* If touched within the menu bar? */
+				if ((MENU_Y < TS_State.Y) && (MENU_Y+MENU_HEIGHT > TS_State.Y)) {
+					item_new = (BSP_LCD_GetXSize() - TS_State.X)	// Calculate new item
+							/ (BSP_LCD_GetXSize()/MENU_ENTRY_COUNT);
+				//	BSP_LCD_Clear(LCD_COLOR_WHITE);
+				//	if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
+					if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
+						item_new = MENU_NONE;	// Out of bounds
+					}
+					if (item_new == item_old) {	// 2 times the same menu item
+						item_new = MENU_NONE;
+						MENU_transition = item_old;
+					}
 				}
 			}
-		}
 	}
 }
-
 
 
 /** ***************************************************************************

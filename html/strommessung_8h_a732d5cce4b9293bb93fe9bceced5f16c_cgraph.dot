@@ -1,0 +1,16 @@
+digraph "measure_current_HAL"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="measure_current_HAL",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ADC3_scan_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$measuring_8c.html#afe1768dbd46b7351841a8ac4f54d7201",tooltip="Initialize ADC, timer and DMA for sequential acquisition = scan mode."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="ADC3_scan_start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$measuring_8c.html#aeb8392280f6f2fe674f02d12012e83a6",tooltip="Start DMA, ADC and timer."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="get_ADC_NUMS",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$measuring_8c.html#a0a03a8156d97779343c341d786c0e365",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="get_ADC_samples",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$measuring_8c.html#a52e98955c64c42add7a415a6514ec589",tooltip=" "];
+}
