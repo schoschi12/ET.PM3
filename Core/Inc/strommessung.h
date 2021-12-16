@@ -6,7 +6,7 @@
 
 #ifndef INC_STROMMESSUNG_H_
 #define INC_STROMMESSUNG_H_
-#define REPETITIONS 5
+#define REPETITIONS 3
 
 /******************************************************************************
  * Includes

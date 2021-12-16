@@ -29,8 +29,9 @@ float correction = 1.0;
 uint16_t amplitudeLUT[] = { 3780, 3713, 3527, 3125, 2815, 2560, 2250, 1955,
 		1915, 1785, 1700 };
 uint16_t distanceLUT[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-float factorLUT[] = { 0.29, 0.7, 1, 1.1, 1.32 };
-int angleLUT[] = { -90, -45, 0, 45, 90 };
+//float factorLUT[] = {0.82, 0.91, 1.0, 1.13, 1.25};
+double factorLUT[] = {0.855, 0.955, 1.065, 1.17};
+int angleLUT[] = {45, 22.5, 0, -22.5, -45};
 static float distance;
 static float angle;
 
@@ -47,6 +48,7 @@ static float angle;
  * @param amplitude of right sensing pad
  */
 void calc_distance(uint16_t left, uint16_t right) {
+
 	int index = 0;
 	float average = ((float) left + (float) right) / 2 * correction;
 	while (average < amplitudeLUT[index]
@@ -69,16 +71,14 @@ void calc_distance(uint16_t left, uint16_t right) {
  * @param amplitude of right sensing pad
  */
 void calc_angle(uint16_t left, uint16_t right) {
-	int index = 0;
-	float factor = (float) left / (float) right;
-	while (factor > factorLUT[index]
-			&& index < ((sizeof(factorLUT) / sizeof(factorLUT[0])) - 2)) {
-		index++;
-	}
-	if ((factorLUT[index] - factor) < (factor - factorLUT[index + 1])) {
-		angle = angleLUT[index];
-	} else {
-		angle = angleLUT[index + 1];
+	double factor = (double) left/(double)right;
+	for (int i = 0; i < 4; i++){
+		if (factor < factorLUT[i]){
+			angle = angleLUT[i];
+			return;
+		} else{
+			angle = angleLUT[4];
+		}
 	}
 }
 
@@ -148,6 +148,7 @@ void measure_distance() {
 	BSP_LCD_SetFont(&Font24);
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+
 	char text[16];
 	snprintf(text, 15, "ANGLE: %4d", (int) angle);
 	BSP_LCD_DisplayStringAt(0, 180, (uint8_t*) text, LEFT_MODE);

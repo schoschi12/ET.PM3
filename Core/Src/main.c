@@ -36,6 +36,7 @@
 static uint32_t timer_value_ms = 0;
 double dispay_current = 0;
 
+
 MENU_item_t last_state = MENU_NONE;
 MENU_item_t new_state = MENU_NONE;
 /******************************************************************************
@@ -47,6 +48,8 @@ static void MX_GPIO_Init(void);
 static void initiate_shutdown(void);
 static void prepare_shutdown(void);
 static void check_time(void);
+static void prepare_display_distance_measurement(void);
+static void prepare_display_current_measurement(void);
 
 /** ***************************************************************************
  * @brief  Main function
@@ -98,16 +101,6 @@ int main(void) {
 			//MEAS_show_data_current(&dispay_current);
 		}
 
-		if (PB_pressed()) {				// Check if user pushbutton was pressed
-			DAC_active = !DAC_active;	// Toggle DAC on/off
-			if (DAC_active) {
-				DAC_init();
-				BSP_LED_On(LED4);
-			} else {
-				DAC_reset();
-				BSP_LED_Off(LED4);
-			}
-		}
 
 		/* Comment next line if touchscreen interrupt is enabled */
 		if (MENU_get_transition() != MENU_NONE) {
@@ -129,6 +122,7 @@ int main(void) {
 			} else if (last_state == MENU_TWO) {
 
 				dispay_current = measure_current_HAL();
+
 			}
 			break;
 		case MENU_ZERO:
@@ -136,6 +130,7 @@ int main(void) {
 			new_state = MENU_NONE;
 			break;
 		case MENU_ONE:
+			//prepare_display_distance_measurement();
 			measure_distance();
 //				if (MEAS_data_ready) {			// Show data if new data available
 //					MEAS_data_ready = false;
@@ -145,6 +140,7 @@ int main(void) {
 			new_state = MENU_ONE;
 			break;
 		case MENU_TWO:
+			prepare_display_current_measurement();
 			dispay_current = measure_current_HAL();
 			new_state = MENU_TWO;
 			break;
@@ -313,3 +309,34 @@ void TIM7_IRQHandler(void) {
 	}
 }
 
+void prepare_display_current_measurement(void){
+
+	const uint32_t Y_OFFSET = 200;
+	const uint32_t X_SIZE = 240;
+
+		/* Clear the display */
+		BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+		BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1 + 60);
+		/* Write first 2 samples as numbers */
+		MENU_draw();
+		BSP_LCD_SetFont(&Font24);
+		BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+		BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+}
+
+void prepare_display_distance_measurement(void){
+//display result
+const uint32_t Y_OFFSET = 260;
+const uint32_t X_SIZE = 240;
+uint32_t data;
+uint32_t data_last;
+/* Clear the display */
+BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
+MENU_draw();
+/* Write first 2 samples as numbers */
+BSP_LCD_SetFont(&Font24);
+BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+
+}
