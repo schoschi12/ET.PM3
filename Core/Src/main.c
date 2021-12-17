@@ -126,11 +126,13 @@ int main(void) {
 			}
 			break;
 		case MENU_ZERO:
+			prepare_display_distance_measurement();
 			measure_distance();
 			new_state = MENU_NONE;
 			break;
 		case MENU_ONE:
 			//prepare_display_distance_measurement();
+			prepare_display_distance_measurement();
 			measure_distance();
 //				if (MEAS_data_ready) {			// Show data if new data available
 //					MEAS_data_ready = false;

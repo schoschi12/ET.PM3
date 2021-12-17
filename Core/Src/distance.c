@@ -27,27 +27,27 @@ float correction = 1.0;
 //uint16_t amplitudeLUT[] = {3760, 3650, 3275, 2750, 2475, 2175, 2025, 1925, 1800, 1575, 1450};
 //uint16_t amplitudeLUT[] = {3800, 3722, 3585, 3400, 3143, 2837, 2630, 2475, 2370, 2304, 2180};
 uint16_t amplitudeLUT[] = { 3780, 3713, 3527, 3125, 2815, 2560, 2250, 1955,
-		1915, 1785, 1700 };
-uint16_t distanceLUT[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-//float factorLUT[] = {0.82, 0.91, 1.0, 1.13, 1.25};
-double factorLUT[] = {0.855, 0.955, 1.065, 1.17};
-int angleLUT[] = {45, 22.5, 0, -22.5, -45};
-static float distance;
-static float angle;
+		1915, 1785, 1700 };						// LUT Amplitude in ADC counts
+uint16_t distanceLUT[] = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };// LUT distance in mm
+double factorLUT[] = { 0.855, 0.955, 1.065, 1.17 };	// factor LUT calculated as left distance / right distance
+int angleLUT[] = { 45, 22.5, 0, -22.5, -45 };			// angle LUT in °
+uint32_t buffer[STDDEVSIZE] = { 0 }; // FIFO buffer for values used for std deviation calculation
+uint32_t SD_raw; 					// raw ADC value of std. deviation
+uint32_t SD_calc;			// calculated distance value of std. deviation in um
 
 /******************************************************************************
  * Functions
  *****************************************************************************/
 
 /**
- * @brief calculates distance based on calibration table.
+ * @brief calculates distance and standarddeviation based on calibration table.
  *
  * Averages the amplitude of both sensing pads and searches for corresponding distance. Saves distance in global variable.
  *
  * @param amplitude of left sensing pad
  * @param amplitude of right sensing pad
  */
-void calc_distance(uint16_t left, uint16_t right) {
+void calc_distance(uint16_t left, uint16_t right, double *distance) {
 
 	int index = 0;
 	float average = ((float) left + (float) right) / 2 * correction;
@@ -56,10 +56,13 @@ void calc_distance(uint16_t left, uint16_t right) {
 		index++;
 	}
 	if ((amplitudeLUT[index] - average) < (average - amplitudeLUT[index + 1])) {
-		distance = distanceLUT[index];
+		*distance = distanceLUT[index];
 	} else {
-		distance = distanceLUT[index + 1];
+		*distance = distanceLUT[index + 1];
 	}
+	SD_calc = 1000 * (distanceLUT[index] - distanceLUT[index + 1]) * SD_raw
+	/ (amplitudeLUT[index] - amplitudeLUT[index + 1]);
+
 }
 
 /**
@@ -70,14 +73,14 @@ void calc_distance(uint16_t left, uint16_t right) {
  * @param amplitude of left sensing pad
  * @param amplitude of right sensing pad
  */
-void calc_angle(uint16_t left, uint16_t right) {
-	double factor = (double) left/(double)right;
-	for (int i = 0; i < 4; i++){
-		if (factor < factorLUT[i]){
-			angle = angleLUT[i];
+void calc_angle(uint16_t left, uint16_t right, int *angle) {
+	double factor = (double) left / (double) right;
+	for (int i = 0; i < 4; i++) {
+		if (factor < factorLUT[i]) {
+			*angle = angleLUT[i];
 			return;
-		} else{
-			angle = angleLUT[4];
+		} else {
+			*angle = angleLUT[4];
 		}
 	}
 }
@@ -121,6 +124,8 @@ void measure_distance() {
 
 	uint32_t avg_left = 0;
 	uint32_t avg_right = 0;
+	double distance;
+	int angle;
 	for (int i = 0; i < REPETITIONS; i++) {
 		ADC3_scan_init(13, 4);
 		ADC3_scan_start();
@@ -132,24 +137,36 @@ void measure_distance() {
 	avg_right /= REPETITIONS;
 	avg_left /= REPETITIONS;
 
-	calc_distance(avg_left, avg_right);
-	calc_angle(avg_left, avg_right);
+	calc_distance(avg_left, avg_right, &distance);
+	calc_angle(avg_left, avg_right, &angle);
+
+	for (int i = 0; i < (STDDEVSIZE - 1); i++) {
+		buffer[i] = buffer[i + 1];
+	}
+	buffer[STDDEVSIZE - 1] = (avg_left + avg_right) / 2;
+	SD_raw = calculateSD(&buffer[0], STDDEVSIZE);
 
 	//display result
-	const uint32_t Y_OFFSET = 260;
-	const uint32_t X_SIZE = 240;
-	uint32_t data;
-	uint32_t data_last;
+	//const uint32_t Y_OFFSET = 260;
+	//const uint32_t X_SIZE = 240;
+	//uint32_t data;
+	//uint32_t data_last;
 	/* Clear the display */
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
-	MENU_draw();
+	BSP_LCD_FillRect(40, 15, 140, 140);
+	//MENU_draw();
 	/* Write first 2 samples as numbers */
-	BSP_LCD_SetFont(&Font24);
-	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	//BSP_LCD_SetFont(&Font24);
+	//BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 
 	char text[16];
+	if (buffer[0] != 0) {
+		snprintf(text, 15, "STDEV: %4d count", SD_raw);
+		BSP_LCD_DisplayStringAt(0, 140, (uint8_t*) text, LEFT_MODE);
+		snprintf(text, 15, "STDEV: %4d um", SD_calc);
+		BSP_LCD_DisplayStringAt(0, 160, (uint8_t*) text, LEFT_MODE);
+	}
 	snprintf(text, 15, "ANGLE: %4d", (int) angle);
 	BSP_LCD_DisplayStringAt(0, 180, (uint8_t*) text, LEFT_MODE);
 	snprintf(text, 15, "LEFT: %4d", (int) (avg_left));
