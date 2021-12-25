@@ -2,48 +2,11 @@
  * @file
  * @brief Measuring voltages with the ADC(s) in different configurations
  *
+ * Contains functions to configure and start ADC with DMA. Also contains
+ * interrupt handlers to manage finisched ADC conversions. Additionally,
+ * functions to average multiple measurements as well as functions to
+ * calculate the standard deviation are implemented in this file.
  *
- * Demonstrates different ADC (Analog to Digital Converter) modes
- * ==============================================================
- *
- * - ADC in single conversion mode
- * - ADC triggered by a timer and with interrupt after end of conversion
- * - ADC combined with DMA (Direct Memory Access) to fill a buffer
- * - Dual mode = simultaneous sampling of two inputs by two ADCs
- * - Scan mode = sequential sampling of two inputs by one ADC
- * - Simple DAC output is demonstrated as well
- * - Analog mode configuration for GPIOs
- * - Display recorded data on the graphics display
- *
- * Peripherals @ref HowTo
- *
- * @image html demo_screenshot_board.jpg
- *
- *
- * HW used for the demonstrations
- * ==============================
- * A simple HW was used for testing the code.
- * It is connected to the pins marked in red in the above image.
- *
- * @image html demo_board_schematic.png
- *
- * Of course the code runs also without this HW.
- * Simply connect a signal or waveform generator to the input(s).
- *
- *
- * @anchor HowTo
- * How to Configure the Peripherals: ADC, TIMER and DMA
- * ====================================================
- *
- * All the peripherals are accessed by writing to or reading from registers.
- * From the programmer’s point of view this is done exactly as
- * writing or reading the value of a variable.
- * @n Writing to a register configures the HW of the associated peripheral
- * to do what is required.
- * @n Reading from a registers gets status and data from the HW peripheral.
- *
- * The information on which bits have to be set to get a specific behavior
- * is documented in the <b>reference manual</b> of the mikrocontroller.
  *
  *
  * ----------------------------------------------------------------------------
@@ -67,7 +30,7 @@
  *****************************************************************************/
 #define ADC_DAC_RES		12			///< Resolution
 #define ADC_NUMS		120			///< Number of samples
-#define ADC_FS			1200	///< Sampling freq. => 12 samples for a 50Hz period
+#define ADC_FS			1200		///< Sampling freq. => 12 samples for a 50Hz period
 #define ADC_CLOCK		84000000	///< APB2 peripheral clock frequency
 #define ADC_CLOCKS_PS	15			///< Clocks/sample: 3 hold + 12 conversion
 #define TIM_CLOCK		84000000	///< APB1 timer clock frequency
@@ -124,7 +87,6 @@ void ADC_reset(void) {
 	RCC->APB2RSTR &= ~RCC_APB2RSTR_ADCRST;	// Release reset of ADCs
 	TIM2->CR1 &= ~TIM_CR1_CEN;				// Disable timer
 }
-
 
 /** ***************************************************************************
  * @brief Configure the timer to trigger the ADC(s)
@@ -302,70 +264,8 @@ void DMA2_Stream4_IRQHandler(void) {
 	}
 }
 
-/** ***************************************************************************
- * @brief Draw buffer data as curves and write the first two samples as numbers.
- * @n After drawing, the buffer is cleared to get ready for the next run.
- * @note Drawing outside of the display crashes the system!
- * @todo Create new .h and .c files for calculating and displaying
- * of signals and results.
- * The code of this function was put into the same file for debugging purposes
- * and should be moved to a separate file in the final version
- * because displaying is not related to measuring.
- *****************************************************************************/
-void MEAS_show_data(void) {
-	const uint32_t Y_OFFSET = 260;
-	const uint32_t X_SIZE = 240;
-	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;	// Scaling factor
-	uint32_t data;
-	uint32_t data_last;
-	/* Clear the display */
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
-	/* Write first 2 samples as numbers */
-	BSP_LCD_SetFont(&Font24);
-	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	char text[16];
-	snprintf(text, 15, "1. sample %4d", (int) (ADC_samples[0]));
-	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
-	snprintf(text, 15, "2. sample %4d", (int) (ADC_samples[1]));
-	BSP_LCD_DisplayStringAt(0, 80, (uint8_t*) text, LEFT_MODE);
-	/* Draw the  values of input channel 1 as a curve */
-	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-	data = ADC_samples[MEAS_input_count * 0] / f;
-	for (uint32_t i = 1; i < ADC_NUMS; i++) {
-		data_last = data;
-		data = (ADC_samples[MEAS_input_count * i]) / f;
-		if (data > Y_OFFSET) {
-			data = Y_OFFSET;
-		}	// Limit value, prevent crash
-		BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
-				Y_OFFSET - data);
-	}
-	/* Draw the  values of input channel 2 (if present) as a curve */
-	if (MEAS_input_count == 2) {
-		BSP_LCD_SetTextColor(LCD_COLOR_RED);
-		data = ADC_samples[MEAS_input_count * 0 + 1] / f;
-		for (uint32_t i = 1; i < ADC_NUMS; i++) {
-			data_last = data;
-			data = (ADC_samples[MEAS_input_count * i + 1]) / f;
-			if (data > Y_OFFSET) {
-				data = Y_OFFSET;
-			}	// Limit value, prevent crash
-			BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
-					Y_OFFSET - data);
-		}
-	}
-	/* Clear buffer and flag */
-	for (uint32_t i = 0; i < ADC_NUMS; i++) {
-		ADC_samples[2 * i] = 0;
-		ADC_samples[2 * i + 1] = 0;
-	}
-	ADC_sample_count = 0;
-}
-
 /**
- * @brief Applies 5 point moving average tovalues in ADC_DMA buffer.
+ * @brief Applies 5 point moving average to values in ADC_DMA buffer.
  *
  * Calculates difference between maximum and minimum value.
  *
@@ -410,79 +310,22 @@ void MEAS_average(uint32_t *avg_left, uint32_t *avg_right) {
 /**
  * @brief Calculates the standard deviation of the values in the ADC_DMA buffer.
  *
- * SD = sqrt(sum(xi - mean)^2)
+ * SD = sqrt(sum(x_i - mean)^2)
  *
  * @return double with standard deviation of stored values from ADC_DMA buffer.
  */
 
-
-double calculateSD(uint32_t *buffer, uint8_t repetitions){
+double calculateSD(uint32_t *buffer, uint8_t repetitions) {
 	double sum = 0.0, mean, SD = 0.0;
-	//uint32_t avg_left_old = 0;
-	//uint32_t avg_left_new = 0;
-    uint8_t i;
+	uint8_t i;
 
 	for (i = 0; i < repetitions; ++i) {
-	        sum += (double) buffer[i];
-	    }
-	mean = sum/repetitions;
+		sum += (double) buffer[i];
+	}
+	mean = sum / repetitions;
 
-    for (i = 0; i < repetitions; ++i) {
-        SD += pow((double)buffer[i] - mean, 2);
-    }
-    return sqrt(SD / repetitions);
+	for (i = 0; i < repetitions; ++i) {
+		SD += pow((double) buffer[i] - mean, 2);
+	}
+	return sqrt(SD / repetitions);
 }
-
-
-void MEAS_show_data_current(double current) {
-	const uint32_t Y_OFFSET = 280;
-	const uint32_t X_SIZE = 240;
-	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;	// Scaling factor
-	uint32_t data;
-	uint32_t data_last;
-	/* Clear the display */
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(0, 40, X_SIZE, Y_OFFSET + 1);
-	/* Write first 2 samples as numbers */
-	BSP_LCD_SetFont(&Font24);
-	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	char text[16];
-	snprintf(text, 15, "current %.2lfA", current);
-	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) text, LEFT_MODE);
-//	snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
-//	BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
-	/* Draw the  values of input channel 1 as a curve */
-	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-	data = ADC_samples[MEAS_input_count * 0] / f;
-	for (uint32_t i = 1; i < ADC_NUMS; i++) {
-		data_last = data;
-		data = (ADC_samples[MEAS_input_count * i]) / f;
-		if (data > Y_OFFSET) {
-			data = Y_OFFSET;
-		}	// Limit value, prevent crash
-		BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
-				Y_OFFSET - data);
-	}
-	/* Draw the  values of input channel 2 (if present) as a curve */
-	if (MEAS_input_count == 2) {
-		BSP_LCD_SetTextColor(LCD_COLOR_RED);
-		data = ADC_samples[MEAS_input_count * 0 + 1] / f;
-		for (uint32_t i = 1; i < ADC_NUMS; i++) {
-			data_last = data;
-			data = (ADC_samples[MEAS_input_count * i + 1]) / f;
-			if (data > Y_OFFSET) {
-				data = Y_OFFSET;
-			}	// Limit value, prevent crash
-			BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i,
-					Y_OFFSET - data);
-		}
-	}
-	/* Clear buffer and flag */
-	for (uint32_t i = 0; i < ADC_NUMS; i++) {
-		ADC_samples[2 * i] = 0;
-		ADC_samples[2 * i + 1] = 0;
-	}
-	ADC_sample_count = 0;
-}
-

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['pb_5fpressed_5fflag_0',['PB_pressed_flag',['../pushbutton_8c.html#a6eeac83af2c4bba5bf298ac3c0938eaa',1,'pushbutton.c']]],
-  ['points_1',['points',['../distance_8c.html#ad0ca38e00717a2cb93791e79377a0aff',1,'distance.c']]]
+  ['n_5fpoints_0',['n_points',['../distance_8c.html#a9e9f5e81be9055b77cad529a7609e195',1,'distance.c']]],
+  ['new_5fstate_1',['new_state',['../main_8c.html#a31bd71b2bc6a0ee2d805447b432114eb',1,'main.c']]]
 ];

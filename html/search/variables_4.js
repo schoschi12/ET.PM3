@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['factorlut_0',['factorLUT',['../distance_8c.html#ae0ca4ef5e5959d8a08c318b8593afaa4',1,'distance.c']]]
+  ['factorlut_0',['factorLUT',['../distance_8c.html#ac24eacf603d11d69e07df6aaa2a43b31',1,'distance.c']]]
 ];

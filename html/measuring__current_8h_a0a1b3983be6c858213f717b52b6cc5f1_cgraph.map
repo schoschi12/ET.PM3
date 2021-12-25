@@ -1,0 +1,9 @@
+<map id="measure_current_HAL" name="measure_current_HAL">
+<area shape="rect" id="node1" title=" " alt="" coords="5,81,156,108"/>
+<area shape="rect" id="node2" href="$measuring_8c.html#afe1768dbd46b7351841a8ac4f54d7201" title="Initialize ADC, timer and DMA for sequential acquisition = scan mode." alt="" coords="209,5,323,32"/>
+<area shape="rect" id="node3" href="$measuring_8c.html#aeb8392280f6f2fe674f02d12012e83a6" title="Start DMA, ADC and timer." alt="" coords="204,56,328,83"/>
+<area shape="rect" id="node4" href="$measuring_8c.html#a67a92e6c88312390e33cb90593752096" title="Calculates the standard deviation of the values in the ADC_DMA buffer." alt="" coords="220,107,312,133"/>
+<area shape="rect" id="node5" href="$measuring_8c.html#ad62391cc1334f996f7987d8f301c45ed" title="Applies 5 point moving average to values in ADC_DMA buffer." alt="" coords="211,157,321,184"/>
+<area shape="rect" id="node6" href="$measuring_8c.html#a0a03a8156d97779343c341d786c0e365" title=" " alt="" coords="382,132,501,159"/>
+<area shape="rect" id="node7" href="$measuring_8c.html#a52e98955c64c42add7a415a6514ec589" title=" " alt="" coords="376,183,507,209"/>
+</map>

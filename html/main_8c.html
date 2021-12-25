@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>demo_code: Src/main.c File Reference</title>
+<title>Cable-monitor: Src/main.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="zhaw.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">demo_code
+   <div id="projectname">Cable-monitor
    </div>
    <div id="projectbrief">ZHAW ET.PM3</div>
   </td>
@@ -85,27 +85,30 @@ $(function() {
 <code>#include &quot;<a class="el" href="pushbutton_8h_source.html">pushbutton.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="menu_8h_source.html">menu.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="measuring_8h_source.html">measuring.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="strommessung_8h_source.html">strommessung.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="measuring__current_8h_source.html">measuring_current.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="distance_8h_source.html">distance.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="shutdown_8h_source.html">shutdown.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for main.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="main_8c__incl.png" border="0" usemap="#a_src_2main_8c" alt=""/></div>
 <map name="a_src_2main_8c" id="a_src_2main_8c">
-<area shape="rect" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="551,5,636,32"/>
-<area shape="rect" title=" " alt="" coords="5,80,99,107"/>
-<area shape="rect" title=" " alt="" coords="123,80,280,107"/>
-<area shape="rect" title=" " alt="" coords="477,155,624,196"/>
-<area shape="rect" title=" " alt="" coords="355,80,530,107"/>
-<area shape="rect" href="main_8h.html" title="See main.c." alt="" coords="299,162,360,189"/>
-<area shape="rect" href="pushbutton_8h.html" title="See pushbutton.c." alt="" coords="931,162,1029,189"/>
-<area shape="rect" href="menu_8h.html" title="See menu.c." alt="" coords="387,162,453,189"/>
-<area shape="rect" href="measuring_8h.html" title="See measuring.c." alt="" coords="763,162,856,189"/>
-<area shape="rect" href="strommessung_8h.html" title="See strommessung.c." alt="" coords="814,80,933,107"/>
-<area shape="rect" href="distance_8h.html" title="See distance.c." alt="" coords="656,80,739,107"/>
-<area shape="rect" title=" " alt="" coords="387,244,453,271"/>
-<area shape="rect" title=" " alt="" coords="856,244,931,271"/>
-<area shape="rect" title=" " alt="" coords="648,162,739,189"/>
+<area shape="rect" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="420,5,505,32"/>
+<area shape="rect" title=" " alt="" coords="5,244,99,271"/>
+<area shape="rect" title=" " alt="" coords="123,244,280,271"/>
+<area shape="rect" title=" " alt="" coords="769,155,916,196"/>
+<area shape="rect" title=" " alt="" coords="817,80,991,107"/>
+<area shape="rect" href="main_8h.html" title="See main.c." alt="" coords="167,162,228,189"/>
+<area shape="rect" href="pushbutton_8h.html" title="See pushbutton.c." alt="" coords="533,162,630,189"/>
+<area shape="rect" href="menu_8h.html" title="See menu.c." alt="" coords="303,80,369,107"/>
+<area shape="rect" href="measuring_8h.html" title="See measuring.c." alt="" coords="415,162,508,189"/>
+<area shape="rect" href="measuring__current_8h.html" title="See measuring:_current.c." alt="" coords="393,80,533,107"/>
+<area shape="rect" href="distance_8h.html" title="See distance.c." alt="" coords="659,80,741,107"/>
+<area shape="rect" href="shutdown_8h.html" title="See shutdown.c." alt="" coords="89,80,177,107"/>
+<area shape="rect" title=" " alt="" coords="305,244,370,271"/>
+<area shape="rect" title=" " alt="" coords="531,244,605,271"/>
+<area shape="rect" title=" " alt="" coords="430,244,493,271"/>
+<area shape="rect" title=" " alt="" coords="655,162,745,189"/>
 </map>
 </div>
 </div>
@@ -121,27 +124,15 @@ Functions</h2></td></tr>
 <tr class="separator:a9506db1724e530dd11bccbdd8968998f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac724e431d2af879252de35615be2bdea"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ac724e431d2af879252de35615be2bdea">MX_GPIO_Init</a> (void)</td></tr>
 <tr class="separator:ac724e431d2af879252de35615be2bdea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa48a38a8de8c1db68965784d41736c8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#afa48a38a8de8c1db68965784d41736c8">initiate_shutdown</a> (void)</td></tr>
-<tr class="separator:afa48a38a8de8c1db68965784d41736c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a147258148eccacdd225b1c0b4e9fa5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6a147258148eccacdd225b1c0b4e9fa5">prepare_shutdown</a> (void)</td></tr>
-<tr class="separator:a6a147258148eccacdd225b1c0b4e9fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e2b464746ce2af83ae0683a1f505349"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a9e2b464746ce2af83ae0683a1f505349">check_time</a> (void)</td></tr>
-<tr class="separator:a9e2b464746ce2af83ae0683a1f505349"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a840291bc02cba5474a4cb46a9b9566fe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a> (void)</td></tr>
 <tr class="memdesc:a840291bc02cba5474a4cb46a9b9566fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main function.  <a href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe">More...</a><br /></td></tr>
 <tr class="separator:a840291bc02cba5474a4cb46a9b9566fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1301488841fd01d37768b04820a332b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ab1301488841fd01d37768b04820a332b">reset_timer7_value</a> (void)</td></tr>
-<tr class="separator:ab1301488841fd01d37768b04820a332b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07271e0193c87c243ab6671fa1d4c6bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a07271e0193c87c243ab6671fa1d4c6bc">tim_TIM7_periodicConfig</a> (uint32_t msPeriod)</td></tr>
-<tr class="separator:a07271e0193c87c243ab6671fa1d4c6bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98cff83252098363b2dbca9608df964e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a98cff83252098363b2dbca9608df964e">TIM7_IRQHandler</a> (void)</td></tr>
-<tr class="separator:a98cff83252098363b2dbca9608df964e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a5be5cb321b3cb99868ea12f6b37fcddd"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a5be5cb321b3cb99868ea12f6b37fcddd">timer_value_ms</a> = 0</td></tr>
-<tr class="separator:a5be5cb321b3cb99868ea12f6b37fcddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfce598ae1a5fd1cd4f563601d13890c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#abfce598ae1a5fd1cd4f563601d13890c">dispay_current</a> = 0</td></tr>
+<tr class="memitem:a6602642d7bd9f5b7a22bdfc4f03bdbed"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6602642d7bd9f5b7a22bdfc4f03bdbed">index_menu</a> = 0</td></tr>
+<tr class="separator:a6602642d7bd9f5b7a22bdfc4f03bdbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfce598ae1a5fd1cd4f563601d13890c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#abfce598ae1a5fd1cd4f563601d13890c">dispay_current</a> = 0.0</td></tr>
 <tr class="separator:abfce598ae1a5fd1cd4f563601d13890c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e551bef5a7a497b3044886fe2e56b59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="menu_8h.html#a6b4f567d35261ed627e450b767b24b56">MENU_item_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a1e551bef5a7a497b3044886fe2e56b59">last_state</a> = <a class="el" href="menu_8h.html#a6b4f567d35261ed627e450b767b24b56ae7c93f3587cf592f4c4e1f527642c460">MENU_NONE</a></td></tr>
 <tr class="separator:a1e551bef5a7a497b3044886fe2e56b59"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,52 +149,6 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a9e2b464746ce2af83ae0683a1f505349" name="a9e2b464746ce2af83ae0683a1f505349"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e2b464746ce2af83ae0683a1f505349">&#9670;&nbsp;</a></span>check_time()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void check_time </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00273">273</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="main_8c_a9e2b464746ce2af83ae0683a1f505349_cgraph.png" border="0" usemap="#amain_8c_a9e2b464746ce2af83ae0683a1f505349_cgraph" alt=""/></div>
-<map name="amain_8c_a9e2b464746ce2af83ae0683a1f505349_cgraph" id="amain_8c_a9e2b464746ce2af83ae0683a1f505349_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,95,32"/>
-<area shape="rect" href="main_8c.html#afa48a38a8de8c1db68965784d41736c8" title=" " alt="" coords="143,5,265,32"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="main_8c_a9e2b464746ce2af83ae0683a1f505349_icgraph.png" border="0" usemap="#amain_8c_a9e2b464746ce2af83ae0683a1f505349_icgraph" alt=""/></div>
-<map name="amain_8c_a9e2b464746ce2af83ae0683a1f505349_icgraph" id="amain_8c_a9e2b464746ce2af83ae0683a1f505349_icgraph">
-<area shape="rect" title=" " alt="" coords="104,5,193,32"/>
-<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
-</map>
-</div>
-
-</div>
-</div>
 <a id="a9506db1724e530dd11bccbdd8968998f" name="a9506db1724e530dd11bccbdd8968998f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9506db1724e530dd11bccbdd8968998f">&#9670;&nbsp;</a></span>gyro_disable()</h2>
 
@@ -237,51 +182,13 @@ Here is the caller graph for this function:</div>
  PF8 is also reconfigured. <br  />
  An other solution would be to remove the GYRO from the microcontroller board by unsoldering it. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00221">221</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00224">224</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="main_8c_a9506db1724e530dd11bccbdd8968998f_icgraph.png" border="0" usemap="#amain_8c_a9506db1724e530dd11bccbdd8968998f_icgraph" alt=""/></div>
 <map name="amain_8c_a9506db1724e530dd11bccbdd8968998f_icgraph" id="amain_8c_a9506db1724e530dd11bccbdd8968998f_icgraph">
 <area shape="rect" title="Disable the onboard gyroscope." alt="" coords="104,5,199,32"/>
-<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="afa48a38a8de8c1db68965784d41736c8" name="afa48a38a8de8c1db68965784d41736c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa48a38a8de8c1db68965784d41736c8">&#9670;&nbsp;</a></span>initiate_shutdown()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void initiate_shutdown </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00263">263</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="main_8c_afa48a38a8de8c1db68965784d41736c8_icgraph.png" border="0" usemap="#amain_8c_afa48a38a8de8c1db68965784d41736c8_icgraph" alt=""/></div>
-<map name="amain_8c_afa48a38a8de8c1db68965784d41736c8_icgraph" id="amain_8c_afa48a38a8de8c1db68965784d41736c8_icgraph">
-<area shape="rect" title=" " alt="" coords="241,5,364,32"/>
-<area shape="rect" href="main_8c.html#a9e2b464746ce2af83ae0683a1f505349" title=" " alt="" coords="104,5,193,32"/>
 <area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
 </map>
 </div>
@@ -309,42 +216,43 @@ Here is the caller graph for this function:</div>
  <dl class="section return"><dt>Returns</dt><dd>not used because main ends in an infinite loop</dd></dl>
 <p>Initialization and infinite while loop </p>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00057">57</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00056">56</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="main_8c_a840291bc02cba5474a4cb46a9b9566fe_cgraph.png" border="0" usemap="#amain_8c_a840291bc02cba5474a4cb46a9b9566fe_cgraph" alt=""/></div>
 <map name="amain_8c_a840291bc02cba5474a4cb46a9b9566fe_cgraph" id="amain_8c_a840291bc02cba5474a4cb46a9b9566fe_cgraph">
-<area shape="rect" title="Main function." alt="" coords="5,487,56,513"/>
-<area shape="rect" href="main_8c.html#a9e2b464746ce2af83ae0683a1f505349" title=" " alt="" coords="143,5,233,32"/>
-<area shape="rect" href="measuring_8c.html#a4500c15ee6b13637e00fd6b901b60224" title="Initialize the DAC." alt="" coords="151,56,225,83"/>
-<area shape="rect" href="measuring_8c.html#a0ec0c70d77844e92e6b1862ab7fc7fb8" title="Resets the DAC." alt="" coords="145,107,231,133"/>
-<area shape="rect" href="main_8c.html#a9506db1724e530dd11bccbdd8968998f" title="Disable the onboard gyroscope." alt="" coords="141,157,235,184"/>
-<area shape="rect" href="measuring_8c.html#a645930ff74ceaacb90aca99fae865f8f" title="Configure GPIOs in analog mode." alt="" coords="104,208,272,235"/>
-<area shape="rect" href="measuring_8c.html#a2ace7017c3957ead5cd587fc6fae0290" title="Configure the timer to trigger the ADC(s)" alt="" coords="128,259,248,285"/>
-<area shape="rect" href="strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1" title="measures the current and displays it" alt="" coords="113,360,263,387"/>
-<area shape="rect" href="menu_8c.html#a2cbb4c209c599e91da57c0d6cf8f710e" title="Draw the menu onto the display." alt="" coords="335,284,429,311"/>
-<area shape="rect" href="distance_8c.html#a0476c1fe6e5721d29eab9c4e6934e495" title="measures the distance and displays it" alt="" coords="124,411,252,437"/>
-<area shape="rect" href="menu_8c.html#a88e016ed6bb3eb9cfe66a3009bc6fbcf" title="Check for selection/transition." alt="" coords="107,461,269,488"/>
-<area shape="rect" href="menu_8c.html#a3de77014a7c52cdf6ff1f973eee6f3f6" title="Get menu selection/transition." alt="" coords="115,512,261,539"/>
-<area shape="rect" href="menu_8c.html#a62e02a141652e1f34b11f73547ce6bc2" title="Shows a hint at startup." alt="" coords="144,563,232,589"/>
-<area shape="rect" href="main_8c.html#ac724e431d2af879252de35615be2bdea" title=" " alt="" coords="137,613,239,640"/>
-<area shape="rect" href="pushbutton_8c.html#a1d6696a09e34d517e04ff82f792baf57" title="Configure interrupt on rising edge for the USER pushbutton." alt="" coords="135,664,241,691"/>
-<area shape="rect" href="pushbutton_8c.html#a6efe94714ab265a5e515c7266d234917" title="Configure the GPIO for the USER pushbutton." alt="" coords="156,715,220,741"/>
-<area shape="rect" href="pushbutton_8c.html#ab920dbc364e7b33bb9186ac45ae1a332" title="Was the pushbutton pressed?" alt="" coords="141,765,235,792"/>
-<area shape="rect" href="main_8c.html#a6a147258148eccacdd225b1c0b4e9fa5" title=" " alt="" coords="125,816,251,843"/>
-<area shape="rect" href="main_8c.html#ab1301488841fd01d37768b04820a332b" title=" " alt="" coords="123,867,253,893"/>
-<area shape="rect" href="main_8c.html#ad554cbf06ce0fa6f92a0c4152b8a4c64" title="System Clock Configuration." alt="" coords="117,917,259,944"/>
-<area shape="rect" href="main_8c.html#a07271e0193c87c243ab6671fa1d4c6bc" title=" " alt="" coords="107,968,269,995"/>
-<area shape="rect" href="main_8c.html#afa48a38a8de8c1db68965784d41736c8" title=" " alt="" coords="321,5,443,32"/>
-<area shape="rect" href="measuring_8c.html#afe1768dbd46b7351841a8ac4f54d7201" title="Initialize ADC, timer and DMA for sequential acquisition = scan mode." alt="" coords="325,436,439,463"/>
-<area shape="rect" href="measuring_8c.html#aeb8392280f6f2fe674f02d12012e83a6" title="Start DMA, ADC and timer." alt="" coords="320,335,444,361"/>
-<area shape="rect" href="measuring_8c.html#ad62391cc1334f996f7987d8f301c45ed" title="Applies 5 point moving average tovalues in ADC_DMA buffer." alt="" coords="327,385,437,412"/>
-<area shape="rect" href="measuring_8c.html#a0a03a8156d97779343c341d786c0e365" title=" " alt="" coords="498,360,617,387"/>
-<area shape="rect" href="measuring_8c.html#a52e98955c64c42add7a415a6514ec589" title=" " alt="" coords="492,411,623,437"/>
-<area shape="rect" href="distance_8c.html#a6a2ca20d8838c78baaa23fe87ab3ff2e" title="calculates angle based on calibration table." alt="" coords="340,537,424,564"/>
-<area shape="rect" href="distance_8c.html#af4d5fbc1888ee69ddb943dc7907ad50d" title="calculates distance based on calibration table." alt="" coords="331,588,433,615"/>
-<area shape="rect" href="distance_8c.html#ac7889be3035035f71a3d72b999c94ae8" title="draws arrow based on angle and position on display" alt="" coords="339,487,425,513"/>
+<area shape="rect" title="Main function." alt="" coords="5,513,56,540"/>
+<area shape="rect" href="shutdown_8c.html#a9e2b464746ce2af83ae0683a1f505349" title="function to check for the time the device is running if the device runs longer than 20 seconds the sh..." alt="" coords="144,5,233,32"/>
+<area shape="rect" href="main_8c.html#a9506db1724e530dd11bccbdd8968998f" title="Disable the onboard gyroscope." alt="" coords="141,56,236,83"/>
+<area shape="rect" href="measuring_8c.html#a645930ff74ceaacb90aca99fae865f8f" title="Configure GPIOs in analog mode." alt="" coords="105,107,273,133"/>
+<area shape="rect" href="measuring_8c.html#a2ace7017c3957ead5cd587fc6fae0290" title="Configure the timer to trigger the ADC(s)" alt="" coords="129,157,249,184"/>
+<area shape="rect" href="measuring__current_8c.html#a0a1b3983be6c858213f717b52b6cc5f1" title=" " alt="" coords="113,208,264,235"/>
+<area shape="rect" href="distance_8c.html#ac0ba7dd7ed46fce16db1fcdd1722cb0b" title="measures the distance and displays it" alt="" coords="125,259,253,285"/>
+<area shape="rect" href="menu_8c.html#a88e016ed6bb3eb9cfe66a3009bc6fbcf" title="Check for selection/transition." alt="" coords="107,309,270,336"/>
+<area shape="rect" href="menu_8c.html#a2cbb4c209c599e91da57c0d6cf8f710e" title="Draw the menu onto the display." alt="" coords="336,461,431,488"/>
+<area shape="rect" href="menu_8c.html#a3de77014a7c52cdf6ff1f973eee6f3f6" title="Get menu selection/transition." alt="" coords="116,543,261,569"/>
+<area shape="rect" href="menu_8c.html#a62e02a141652e1f34b11f73547ce6bc2" title="Shows a hint at startup." alt="" coords="145,593,233,620"/>
+<area shape="rect" href="main_8c.html#ac724e431d2af879252de35615be2bdea" title=" " alt="" coords="137,644,240,671"/>
+<area shape="rect" href="pushbutton_8c.html#a1d6696a09e34d517e04ff82f792baf57" title="Configure interrupt on rising edge for the USER pushbutton." alt="" coords="135,695,242,721"/>
+<area shape="rect" href="pushbutton_8c.html#a6efe94714ab265a5e515c7266d234917" title="Configure the GPIO for the USER pushbutton." alt="" coords="157,745,221,772"/>
+<area shape="rect" href="pushbutton_8c.html#ab920dbc364e7b33bb9186ac45ae1a332" title="Was the pushbutton pressed?" alt="" coords="142,796,235,823"/>
+<area shape="rect" href="menu_8c.html#a2c7b278eea15b50f3043fde3189cfb27" title="clear only the nessecary parts of the display" alt="" coords="109,411,269,453"/>
+<area shape="rect" href="menu_8c.html#a36750ccf5775af2e08bd9583a9cacb61" title="clear only the nessecary parts of the display" alt="" coords="104,477,273,518"/>
+<area shape="rect" href="shutdown_8c.html#a6a147258148eccacdd225b1c0b4e9fa5" title="prepares PA5 as opendrain output to turn of the device after a defined period of time to safe battery..." alt="" coords="125,847,252,873"/>
+<area shape="rect" href="shutdown_8c.html#ab1301488841fd01d37768b04820a332b" title="reset of the upcounting timer value to 0" alt="" coords="123,897,254,924"/>
+<area shape="rect" href="main_8c.html#ad554cbf06ce0fa6f92a0c4152b8a4c64" title="System Clock Configuration." alt="" coords="117,948,260,975"/>
+<area shape="rect" href="shutdown_8c.html#a07271e0193c87c243ab6671fa1d4c6bc" title="initialize timercounter 7 to a milisecond based timer with enabled interrupt 84MHz &#45;&#45;&gt; x*ms" alt="" coords="107,999,270,1025"/>
+<area shape="rect" href="shutdown_8c.html#afa48a38a8de8c1db68965784d41736c8" title="function to activatie the opendrain pin PA5 for the shutdown, this state is visualized with the red l..." alt="" coords="322,5,445,32"/>
+<area shape="rect" href="measuring_8c.html#afe1768dbd46b7351841a8ac4f54d7201" title="Initialize ADC, timer and DMA for sequential acquisition = scan mode." alt="" coords="326,157,441,184"/>
+<area shape="rect" href="measuring_8c.html#aeb8392280f6f2fe674f02d12012e83a6" title="Start DMA, ADC and timer." alt="" coords="321,208,445,235"/>
+<area shape="rect" href="measuring_8c.html#a67a92e6c88312390e33cb90593752096" title="Calculates the standard deviation of the values in the ADC_DMA buffer." alt="" coords="337,259,429,285"/>
+<area shape="rect" href="measuring_8c.html#ad62391cc1334f996f7987d8f301c45ed" title="Applies 5 point moving average to values in ADC_DMA buffer." alt="" coords="328,107,439,133"/>
+<area shape="rect" href="measuring_8c.html#a0a03a8156d97779343c341d786c0e365" title=" " alt="" coords="499,81,618,108"/>
+<area shape="rect" href="measuring_8c.html#a52e98955c64c42add7a415a6514ec589" title=" " alt="" coords="493,132,624,159"/>
+<area shape="rect" href="distance_8c.html#a697941ee7d16c34c32666925688e8ae3" title="calculates angle based on calibration table." alt="" coords="341,309,425,336"/>
+<area shape="rect" href="distance_8c.html#a1c0bb2ba85522dac4af3dc99167a542a" title="calculates distance and standarddeviation based on calibration table." alt="" coords="332,360,435,387"/>
+<area shape="rect" href="distance_8c.html#ac7889be3035035f71a3d72b999c94ae8" title="draws arrow based on angle and position on display" alt="" coords="340,411,427,437"/>
 </map>
 </div>
 
@@ -374,79 +282,13 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00237">237</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00240">240</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="main_8c_ac724e431d2af879252de35615be2bdea_icgraph.png" border="0" usemap="#amain_8c_ac724e431d2af879252de35615be2bdea_icgraph" alt=""/></div>
 <map name="amain_8c_ac724e431d2af879252de35615be2bdea_icgraph" id="amain_8c_ac724e431d2af879252de35615be2bdea_icgraph">
 <area shape="rect" title=" " alt="" coords="104,5,207,32"/>
-<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a6a147258148eccacdd225b1c0b4e9fa5" name="a6a147258148eccacdd225b1c0b4e9fa5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a147258148eccacdd225b1c0b4e9fa5">&#9670;&nbsp;</a></span>prepare_shutdown()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void prepare_shutdown </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00269">269</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="main_8c_a6a147258148eccacdd225b1c0b4e9fa5_icgraph.png" border="0" usemap="#amain_8c_a6a147258148eccacdd225b1c0b4e9fa5_icgraph" alt=""/></div>
-<map name="amain_8c_a6a147258148eccacdd225b1c0b4e9fa5_icgraph" id="amain_8c_a6a147258148eccacdd225b1c0b4e9fa5_icgraph">
-<area shape="rect" title=" " alt="" coords="104,5,231,32"/>
-<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="ab1301488841fd01d37768b04820a332b" name="ab1301488841fd01d37768b04820a332b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1301488841fd01d37768b04820a332b">&#9670;&nbsp;</a></span>reset_timer7_value()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reset_timer7_value </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00279">279</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="main_8c_ab1301488841fd01d37768b04820a332b_icgraph.png" border="0" usemap="#amain_8c_ab1301488841fd01d37768b04820a332b_icgraph" alt=""/></div>
-<map name="amain_8c_ab1301488841fd01d37768b04820a332b_icgraph" id="amain_8c_ab1301488841fd01d37768b04820a332b_icgraph">
-<area shape="rect" title=" " alt="" coords="104,5,235,32"/>
 <area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
 </map>
 </div>
@@ -480,62 +322,13 @@ Here is the caller graph for this function:</div>
 <p>System Clock Configuration. </p>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00169">169</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00172">172</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="main_8c_ad554cbf06ce0fa6f92a0c4152b8a4c64_icgraph.png" border="0" usemap="#amain_8c_ad554cbf06ce0fa6f92a0c4152b8a4c64_icgraph" alt=""/></div>
 <map name="amain_8c_ad554cbf06ce0fa6f92a0c4152b8a4c64_icgraph" id="amain_8c_ad554cbf06ce0fa6f92a0c4152b8a4c64_icgraph">
 <area shape="rect" title="System Clock Configuration." alt="" coords="104,5,247,32"/>
-<area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a98cff83252098363b2dbca9608df964e" name="a98cff83252098363b2dbca9608df964e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98cff83252098363b2dbca9608df964e">&#9670;&nbsp;</a></span>TIM7_IRQHandler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TIM7_IRQHandler </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00306">306</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
-
-</div>
-</div>
-<a id="a07271e0193c87c243ab6671fa1d4c6bc" name="a07271e0193c87c243ab6671fa1d4c6bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07271e0193c87c243ab6671fa1d4c6bc">&#9670;&nbsp;</a></span>tim_TIM7_periodicConfig()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tim_TIM7_periodicConfig </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>msPeriod</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00283">283</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="main_8c_a07271e0193c87c243ab6671fa1d4c6bc_icgraph.png" border="0" usemap="#amain_8c_a07271e0193c87c243ab6671fa1d4c6bc_icgraph" alt=""/></div>
-<map name="amain_8c_a07271e0193c87c243ab6671fa1d4c6bc_icgraph" id="amain_8c_a07271e0193c87c243ab6671fa1d4c6bc_icgraph">
-<area shape="rect" title=" " alt="" coords="104,5,267,32"/>
 <area shape="rect" href="main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
 </map>
 </div>
@@ -550,9 +343,33 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double dispay_current = 0</td>
+          <td class="memname">double dispay_current = 0.0</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00039">39</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a6602642d7bd9f5b7a22bdfc4f03bdbed" name="a6602642d7bd9f5b7a22bdfc4f03bdbed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6602642d7bd9f5b7a22bdfc4f03bdbed">&#9670;&nbsp;</a></span>index_menu</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t index_menu = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00037">37</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
@@ -571,7 +388,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00039">39</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00041">41</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -587,31 +404,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00040">40</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
-
-</div>
-</div>
-<a id="a5be5cb321b3cb99868ea12f6b37fcddd" name="a5be5cb321b3cb99868ea12f6b37fcddd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5be5cb321b3cb99868ea12f6b37fcddd">&#9670;&nbsp;</a></span>timer_value_ms</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t timer_value_ms = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00036">36</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00042">42</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>

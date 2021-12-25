@@ -15,24 +15,13 @@ at the School of Engineering of the Zurich University of Applied Sciences.
 
 @image html demo_screenshot.jpg
 
+Tests have been performed to ensure the functionality of all implemented features. They are documented here: @link testing.html @endlink
+
 The code is written for the evaluation board
 <b>32F429IDISCOVERY (Discovery kit with STM32F429ZI MCU)</b>.
-
-
-What has to be done in terms of Firmware Documentation
-===
-
-Documenting the Tests
----
-@todo Define a test plan and document the tests.
-@n This includes at least:
-test scenarios, conditions, expected results, pass/fail criteria,
-achieved results, verdict and remarks where appropriate.
-@n Use @link testing.html @endlink as a starting point.
-
 ---
 @author	Luca Andretto (andrelu1@students.zhaw.ch), Janosch Dusoczky (dusocjan@students.zhaw.ch)
-@date 12.12.2021
+@date 25.12.2021
 
 @bug No known bugs.
 */

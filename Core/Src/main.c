@@ -23,8 +23,9 @@
 #include "pushbutton.h"
 #include "menu.h"
 #include "measuring.h"
-#include "strommessung.h"
+#include "measuring_current.h"
 #include "distance.h"
+#include "shutdown.h"
 
 /******************************************************************************
  * Defines
@@ -33,9 +34,9 @@
 /******************************************************************************
  * Variables
  *****************************************************************************/
-static uint32_t timer_value_ms = 0;
-double dispay_current = 0;
+static uint8_t index_menu = 0;
 
+double dispay_current = 0.0;
 
 MENU_item_t last_state = MENU_NONE;
 MENU_item_t new_state = MENU_NONE;
@@ -45,11 +46,6 @@ MENU_item_t new_state = MENU_NONE;
 static void SystemClock_Config(void);	///< System Clock Configuration
 static void gyro_disable(void);			///< Disable the onboard gyroscope
 static void MX_GPIO_Init(void);
-static void initiate_shutdown(void);
-static void prepare_shutdown(void);
-static void check_time(void);
-static void prepare_display_distance_measurement(void);
-static void prepare_display_current_measurement(void);
 
 /** ***************************************************************************
  * @brief  Main function
@@ -61,7 +57,7 @@ int main(void) {
 	HAL_Init();							// Initialize the system
 
 	SystemClock_Config();				// Configure system clocks
-
+	//PC7, opendrain Output = 1
 	BSP_LCD_Init();						// Initialize the LCD display
 	BSP_LCD_LayerDefaultInit(LCD_FOREGROUND_LAYER, LCD_FRAME_BUFFER);
 	BSP_LCD_SelectLayer(LCD_FOREGROUND_LAYER);
@@ -86,8 +82,9 @@ int main(void) {
 	MEAS_timer_init();					// Configure the timer
 
 	MX_GPIO_Init();
-	prepare_shutdown();					//PC13, opendrain Output = 1
+
 	tim_TIM7_periodicConfig(1);			//1ms Timer init
+	prepare_shutdown();
 
 	/* Infinite while loop */
 	while (1) {							// Infinitely loop in main function
@@ -101,6 +98,13 @@ int main(void) {
 			//MEAS_show_data_current(&dispay_current);
 		}
 
+		if (PB_pressed()) {				// Check if user pushbutton was pressed
+
+			index_menu++;
+			if (index_menu > 2) {
+				index_menu = 0;
+			}
+		}
 
 		/* Comment next line if touchscreen interrupt is enabled */
 		if (MENU_get_transition() != MENU_NONE) {
@@ -118,7 +122,7 @@ int main(void) {
 			last_state = new_state;
 
 			if (last_state == MENU_ONE) {
-				measure_distance();
+				measure_distance(index_menu);
 			} else if (last_state == MENU_TWO) {
 
 				dispay_current = measure_current_HAL();
@@ -127,23 +131,24 @@ int main(void) {
 			break;
 		case MENU_ZERO:
 			prepare_display_distance_measurement();
-			measure_distance();
+			measure_distance(index_menu);
 			new_state = MENU_NONE;
 			break;
 		case MENU_ONE:
 			//prepare_display_distance_measurement();
 			prepare_display_distance_measurement();
-			measure_distance();
-//				if (MEAS_data_ready) {			// Show data if new data available
-//					MEAS_data_ready = false;
-//					//MEAS_show_data();
-//					MEAS_show_data_current(dispay_current);
-//					}
+			measure_distance(index_menu);
+			//				if (MEAS_data_ready) {			// Show data if new data available
+			//					MEAS_data_ready = false;
+			//					//MEAS_show_data();
+			//					MEAS_show_data_current(dispay_current);
+			//					}
 			new_state = MENU_ONE;
 			break;
 		case MENU_TWO:
 			prepare_display_current_measurement();
 			dispay_current = measure_current_HAL();
+
 			new_state = MENU_TWO;
 			break;
 		case MENU_THREE:
@@ -251,94 +256,5 @@ void MX_GPIO_Init(void) {
 	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
 	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
-	/*Configure GPIO pin : PC13 */
-	GPIO_InitStruct.Pin = GPIO_PIN_13;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;     // Open Drain
-	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 }
 
-void initiate_shutdown(void) {
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-	BSP_LED_On(LED4);
-
-}
-
-void prepare_shutdown(void) {
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-}
-
-void check_time(void) {
-	if (timer_value_ms > 20000) {
-		initiate_shutdown();
-	}
-}
-
-void reset_timer7_value(void) {
-	timer_value_ms = 0;
-}
-
-void tim_TIM7_periodicConfig(uint32_t msPeriod) {
-	//Enable TIM7 timer
-	RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
-	//1 Pulse mode enable
-	TIM7->CR1 &= ~(TIM_CR1_OPM);
-	//Mode --> RESET
-	TIM7->CR2 &= ~(TIM_CR2_MMS);
-
-	//Prescaler
-	TIM7->PSC = (msPeriod * 10) - 1;
-	//Period
-	TIM7->ARR = 8400 - 1; //->10kHz
-
-	//Clear Update Interrupt
-	TIM7->SR &= ~(1UL << 0);
-	//Enable update interrupt
-	TIM7->DIER |= 0x01;
-	//Enable NVIC Interrupt
-	NVIC_EnableIRQ(TIM7_IRQn);
-	//Start perodic timer
-	TIM7->CR1 |= 0x01;
-}
-
-void TIM7_IRQHandler(void) {
-	if (TIM7->SR & 0x01) {
-		TIM7->SR &= ~(1UL); //reset flag
-		timer_value_ms += 1;
-		if (timer_value_ms > 30000) {
-			timer_value_ms = 0;
-		}
-	}
-}
-
-void prepare_display_current_measurement(void){
-
-	const uint32_t Y_OFFSET = 200;
-	const uint32_t X_SIZE = 240;
-
-		/* Clear the display */
-		BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-		BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1 + 60);
-		/* Write first 2 samples as numbers */
-		MENU_draw();
-		BSP_LCD_SetFont(&Font24);
-		BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-		BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-}
-
-void prepare_display_distance_measurement(void){
-//display result
-const uint32_t Y_OFFSET = 260;
-const uint32_t X_SIZE = 240;
-uint32_t data;
-uint32_t data_last;
-/* Clear the display */
-BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
-MENU_draw();
-/* Write first 2 samples as numbers */
-BSP_LCD_SetFont(&Font24);
-BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-
-}

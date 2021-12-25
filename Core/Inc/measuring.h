@@ -35,10 +35,7 @@ void ADC3_scan_start(void);
 uint32_t* get_ADC_samples(void);
 int get_ADC_NUMS(void);
 
-void MEAS_show_data(void);
 void MEAS_average(uint32_t *avg_left, uint32_t *avg_right);
 double calculateSD(uint32_t *buffer, uint8_t repetitions);
-
-void MEAS_show_data_current(double current);
 
 #endif

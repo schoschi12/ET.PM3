@@ -1,0 +1,5 @@
+<map id="Inc/shutdown.h" name="Inc/shutdown.h">
+<area shape="rect" id="node1" title="See shutdown.c." alt="" coords="55,5,164,32"/>
+<area shape="rect" id="node2" href="$main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="5,80,91,107"/>
+<area shape="rect" id="node3" href="$shutdown_8c.html" title="initialize the timerbased shutdown" alt="" coords="115,80,227,107"/>
+</map>

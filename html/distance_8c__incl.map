@@ -1,9 +1,10 @@
 <map id="Src/distance.c" name="Src/distance.c">
-<area shape="rect" id="node1" title="calculates distance and angle and displays them" alt="" coords="180,5,287,32"/>
-<area shape="rect" id="node2" href="$distance_8h.html" title="See distance.c." alt="" coords="192,80,275,107"/>
-<area shape="rect" id="node3" href="$measuring_8h.html" title="See measuring.c." alt="" coords="43,162,136,189"/>
-<area shape="rect" id="node6" title=" " alt="" coords="160,155,307,196"/>
-<area shape="rect" id="node7" title=" " alt="" coords="331,162,421,189"/>
+<area shape="rect" id="node1" title="calculates distance and angle and displays them" alt="" coords="228,5,335,32"/>
+<area shape="rect" id="node2" href="$distance_8h.html" title="See distance.c." alt="" coords="240,80,323,107"/>
+<area shape="rect" id="node3" href="$measuring_8h.html" title="See measuring.c." alt="" coords="91,162,184,189"/>
+<area shape="rect" id="node7" title=" " alt="" coords="208,155,355,196"/>
+<area shape="rect" id="node8" title=" " alt="" coords="379,162,469,189"/>
 <area shape="rect" id="node4" title=" " alt="" coords="5,244,80,271"/>
 <area shape="rect" id="node5" title=" " alt="" coords="105,244,170,271"/>
+<area shape="rect" id="node6" title=" " alt="" coords="194,244,257,271"/>
 </map>

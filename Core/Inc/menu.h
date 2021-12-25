@@ -50,6 +50,9 @@ MENU_entry_t MENU_get_entry(const MENU_item_t item);
 void MENU_check_transition(void);
 MENU_item_t MENU_get_transition(void);
 
+void prepare_display_distance_measurement(void);
+void prepare_display_current_measurement(void);
+
 
 #endif
 

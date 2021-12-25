@@ -1,0 +1,12 @@
+<map id="measure_distance" name="measure_distance">
+<area shape="rect" id="node1" title="measures the distance and displays it" alt="" coords="5,157,133,184"/>
+<area shape="rect" id="node2" href="$measuring_8c.html#afe1768dbd46b7351841a8ac4f54d7201" title="Initialize ADC, timer and DMA for sequential acquisition = scan mode." alt="" coords="186,5,301,32"/>
+<area shape="rect" id="node3" href="$measuring_8c.html#aeb8392280f6f2fe674f02d12012e83a6" title="Start DMA, ADC and timer." alt="" coords="181,56,305,83"/>
+<area shape="rect" id="node4" href="$distance_8c.html#a697941ee7d16c34c32666925688e8ae3" title="calculates angle based on calibration table." alt="" coords="201,107,285,133"/>
+<area shape="rect" id="node5" href="$distance_8c.html#a1c0bb2ba85522dac4af3dc99167a542a" title="calculates distance and standarddeviation based on calibration table." alt="" coords="192,157,295,184"/>
+<area shape="rect" id="node6" href="$measuring_8c.html#a67a92e6c88312390e33cb90593752096" title="Calculates the standard deviation of the values in the ADC_DMA buffer." alt="" coords="197,208,289,235"/>
+<area shape="rect" id="node7" href="$distance_8c.html#ac7889be3035035f71a3d72b999c94ae8" title="draws arrow based on angle and position on display" alt="" coords="200,259,287,285"/>
+<area shape="rect" id="node8" href="$measuring_8c.html#ad62391cc1334f996f7987d8f301c45ed" title="Applies 5 point moving average to values in ADC_DMA buffer." alt="" coords="188,309,299,336"/>
+<area shape="rect" id="node9" href="$measuring_8c.html#a0a03a8156d97779343c341d786c0e365" title=" " alt="" coords="359,284,478,311"/>
+<area shape="rect" id="node10" href="$measuring_8c.html#a52e98955c64c42add7a415a6514ec589" title=" " alt="" coords="353,335,484,361"/>
+</map>

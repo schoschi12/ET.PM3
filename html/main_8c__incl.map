@@ -1,16 +1,18 @@
 <map id="Src/main.c" name="Src/main.c">
-<area shape="rect" id="node1" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="551,5,636,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,99,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="123,80,280,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="477,155,624,196"/>
-<area shape="rect" id="node5" title=" " alt="" coords="355,80,530,107"/>
-<area shape="rect" id="node6" href="$main_8h.html" title="See main.c." alt="" coords="299,162,360,189"/>
-<area shape="rect" id="node8" href="$pushbutton_8h.html" title="See pushbutton.c." alt="" coords="931,162,1029,189"/>
-<area shape="rect" id="node10" href="$menu_8h.html" title="See menu.c." alt="" coords="387,162,453,189"/>
-<area shape="rect" id="node11" href="$measuring_8h.html" title="See measuring.c." alt="" coords="763,162,856,189"/>
-<area shape="rect" id="node12" href="$strommessung_8h.html" title="See strommessung.c." alt="" coords="814,80,933,107"/>
-<area shape="rect" id="node13" href="$distance_8h.html" title="See distance.c." alt="" coords="656,80,739,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="387,244,453,271"/>
-<area shape="rect" id="node9" title=" " alt="" coords="856,244,931,271"/>
-<area shape="rect" id="node14" title=" " alt="" coords="648,162,739,189"/>
+<area shape="rect" id="node1" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="420,5,505,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,244,99,271"/>
+<area shape="rect" id="node3" title=" " alt="" coords="123,244,280,271"/>
+<area shape="rect" id="node4" title=" " alt="" coords="769,155,916,196"/>
+<area shape="rect" id="node5" title=" " alt="" coords="817,80,991,107"/>
+<area shape="rect" id="node6" href="$main_8h.html" title="See main.c." alt="" coords="167,162,228,189"/>
+<area shape="rect" id="node8" href="$pushbutton_8h.html" title="See pushbutton.c." alt="" coords="533,162,630,189"/>
+<area shape="rect" id="node10" href="$menu_8h.html" title="See menu.c." alt="" coords="303,80,369,107"/>
+<area shape="rect" id="node11" href="$measuring_8h.html" title="See measuring.c." alt="" coords="415,162,508,189"/>
+<area shape="rect" id="node13" href="$measuring__current_8h.html" title="See measuring:_current.c." alt="" coords="393,80,533,107"/>
+<area shape="rect" id="node14" href="$distance_8h.html" title="See distance.c." alt="" coords="659,80,741,107"/>
+<area shape="rect" id="node16" href="$shutdown_8h.html" title="See shutdown.c." alt="" coords="89,80,177,107"/>
+<area shape="rect" id="node7" title=" " alt="" coords="305,244,370,271"/>
+<area shape="rect" id="node9" title=" " alt="" coords="531,244,605,271"/>
+<area shape="rect" id="node12" title=" " alt="" coords="430,244,493,271"/>
+<area shape="rect" id="node15" title=" " alt="" coords="655,162,745,189"/>
 </map>

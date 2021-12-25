@@ -1,0 +1,5 @@
+<map id="Inc/measuring_current.h" name="Inc/measuring_current.h">
+<area shape="rect" id="node1" title="See measuring:_current.c." alt="" coords="42,5,203,32"/>
+<area shape="rect" id="node2" href="$main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="5,80,91,107"/>
+<area shape="rect" id="node3" href="$measuring__current_8c.html" title="calculates current through a single phase wire" alt="" coords="115,80,279,107"/>
+</map>

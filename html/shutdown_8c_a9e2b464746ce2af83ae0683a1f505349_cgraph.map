@@ -1,0 +1,4 @@
+<map id="check_time" name="check_time">
+<area shape="rect" id="node1" title="function to check for the time the device is running if the device runs longer than 20 seconds the sh..." alt="" coords="5,5,95,32"/>
+<area shape="rect" id="node2" href="$shutdown_8c.html#afa48a38a8de8c1db68965784d41736c8" title="function to activatie the opendrain pin PA5 for the shutdown, this state is visualized with the red l..." alt="" coords="143,5,265,32"/>
+</map>

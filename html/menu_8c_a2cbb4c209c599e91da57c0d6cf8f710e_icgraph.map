@@ -1,6 +1,6 @@
 <map id="MENU_draw" name="MENU_draw">
-<area shape="rect" id="node1" title="Draw the menu onto the display." alt="" coords="303,25,397,52"/>
-<area shape="rect" id="node2" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,25,56,52"/>
-<area shape="rect" id="node3" href="$strommessung_8c.html#a0a1b3983be6c858213f717b52b6cc5f1" title="measures the current and displays it" alt="" coords="104,25,255,52"/>
-<area shape="rect" id="node4" href="$distance_8c.html#a0476c1fe6e5721d29eab9c4e6934e495" title="measures the distance and displays it" alt="" coords="115,76,243,103"/>
+<area shape="rect" id="node1" title="Draw the menu onto the display." alt="" coords="321,36,416,63"/>
+<area shape="rect" id="node2" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,36,56,63"/>
+<area shape="rect" id="node3" href="$menu_8c.html#a2c7b278eea15b50f3043fde3189cfb27" title="clear only the nessecary parts of the display" alt="" coords="109,29,269,70"/>
+<area shape="rect" id="node4" href="$menu_8c.html#a36750ccf5775af2e08bd9583a9cacb61" title="clear only the nessecary parts of the display" alt="" coords="104,94,273,136"/>
 </map>

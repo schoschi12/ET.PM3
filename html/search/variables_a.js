@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['text_5fcolor_0',['text_color',['../struct_m_e_n_u__entry__t.html#aecbba4786b2fa7dd9667472c1b260132',1,'MENU_entry_t']]],
-  ['timer_5fvalue_5fms_1',['timer_value_ms',['../main_8c.html#a5be5cb321b3cb99868ea12f6b37fcddd',1,'main.c']]]
+  ['repetitions_0',['repetitions',['../distance_8c.html#ac48da7a3da45196168b1b8185154e358',1,'distance.c']]]
 ];

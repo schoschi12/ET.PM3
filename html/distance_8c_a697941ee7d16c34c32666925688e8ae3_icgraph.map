@@ -1,0 +1,5 @@
+<map id="calc_angle" name="calc_angle">
+<area shape="rect" id="node1" title="calculates angle based on calibration table." alt="" coords="280,5,364,32"/>
+<area shape="rect" id="node2" href="$distance_8c.html#ac0ba7dd7ed46fce16db1fcdd1722cb0b" title="measures the distance and displays it" alt="" coords="104,5,232,32"/>
+<area shape="rect" id="node3" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main function." alt="" coords="5,5,56,32"/>
+</map>

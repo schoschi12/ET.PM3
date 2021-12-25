@@ -1,9 +1,9 @@
 <map id="Inc/measuring.h" name="Inc/measuring.h">
-<area shape="rect" id="node1" title="See measuring.c." alt="" coords="144,5,259,32"/>
-<area shape="rect" id="node2" href="$distance_8h.html" title="See distance.c." alt="" coords="240,80,342,107"/>
-<area shape="rect" id="node4" href="$main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="20,155,106,181"/>
-<area shape="rect" id="node5" href="$strommessung_8c.html" title="calculates distance and angle and displays them" alt="" coords="130,155,273,181"/>
-<area shape="rect" id="node6" href="$strommessung_8h.html" title="See strommessung.c." alt="" coords="24,80,164,107"/>
-<area shape="rect" id="node7" href="$measuring_8c.html" title="Measuring voltages with the ADC(s) in different configurations." alt="" coords="367,80,484,107"/>
-<area shape="rect" id="node3" href="$distance_8c.html" title="calculates distance and angle and displays them" alt="" coords="298,155,404,181"/>
+<area shape="rect" id="node1" title="See measuring.c." alt="" coords="166,5,280,32"/>
+<area shape="rect" id="node2" href="$distance_8h.html" title="See distance.c." alt="" coords="261,80,364,107"/>
+<area shape="rect" id="node4" href="$main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="31,155,116,181"/>
+<area shape="rect" id="node5" href="$measuring__current_8c.html" title="calculates current through a single phase wire" alt="" coords="141,155,305,181"/>
+<area shape="rect" id="node6" href="$measuring__current_8h.html" title="See measuring:_current.c." alt="" coords="24,80,185,107"/>
+<area shape="rect" id="node7" href="$measuring_8c.html" title="Measuring voltages with the ADC(s) in different configurations." alt="" coords="388,80,506,107"/>
+<area shape="rect" id="node3" href="$distance_8c.html" title="calculates distance and angle and displays them" alt="" coords="330,155,436,181"/>
 </map>

@@ -196,6 +196,44 @@ void MENU_check_transition(void)
 	}
 }
 
+/** ***************************************************************************
+ * @brief clear only the nessecary parts of the display
+ *****************************************************************************/
+void prepare_display_current_measurement(void) {
+
+	const uint32_t Y_OFFSET = 200;
+	const uint32_t X_SIZE = 240;
+
+	/* Clear the display */
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1 + 60);
+	/* Write first 2 samples as numbers */
+	MENU_draw();
+	BSP_LCD_SetFont(&Font24);
+	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+}
+
+/** ***************************************************************************
+ * @brief clear only the nessecary parts of the display
+ *****************************************************************************/
+void prepare_display_distance_measurement(void) {
+//display result
+	const uint32_t Y_OFFSET = 260;
+	const uint32_t X_SIZE = 240;
+	uint32_t data;
+	uint32_t data_last;
+	/* Clear the display */
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
+	MENU_draw();
+	/* Write first 2 samples as numbers */
+	BSP_LCD_SetFont(&Font24);
+	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+
+}
+
 
 /** ***************************************************************************
  * @brief Interrupt handler for the touchscreen

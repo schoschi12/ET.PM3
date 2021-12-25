@@ -1,5 +1,7 @@
 <map id="Inc/main.h" name="Inc/main.h">
-<area shape="rect" id="node1" title="See main.c." alt="" coords="63,5,145,32"/>
-<area shape="rect" id="node2" href="$main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="5,80,91,107"/>
-<area shape="rect" id="node3" href="$menu_8c.html" title="The menu." alt="" coords="115,80,205,107"/>
+<area shape="rect" id="node1" title="See main.c." alt="" coords="99,5,181,32"/>
+<area shape="rect" id="node2" href="$shutdown_8h.html" title="See shutdown.c." alt="" coords="85,80,195,107"/>
+<area shape="rect" id="node3" href="$main_8c.html" title="Sets up the microcontroller, the clock system and the peripherals." alt="" coords="5,155,91,181"/>
+<area shape="rect" id="node5" href="$menu_8c.html" title="The menu." alt="" coords="219,80,309,107"/>
+<area shape="rect" id="node4" href="$shutdown_8c.html" title="initialize the timerbased shutdown" alt="" coords="115,155,227,181"/>
 </map>
